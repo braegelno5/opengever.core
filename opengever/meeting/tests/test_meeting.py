@@ -30,6 +30,16 @@ class TestMeeting(FunctionalTestCase):
             u'Oct 18, 2013',
             Meeting(start=datetime(2013, 10, 18)).get_title())
 
+    def test_meeting_link(self):
+        meeting = Meeting(location=u'Bern',
+                          start=datetime(2013, 10, 18),
+                          committee=self.committee.load_model())
+        self.assertEqual(
+            u'<a href="http://example.com/opengever-meeting-committeecontainer'
+            '/committee-1/meeting/1" title="Bern, Oct 18, 2013" class'
+            '="contenttype-opengever-meeting-meeting">Bern, Oct 18, 2013</a>',
+            meeting.get_link())
+
     @browsing
     def test_add_meeting(self, browser):
         browser.login().open(self.committee, view='add-meeting')
