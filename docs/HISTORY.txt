@@ -5,6 +5,9 @@ Changelog
 4.3.1 (unreleased)
 ------------------
 
+- Add memberhip_id column to membership table.
+  [phgross]
+
 - Add initial notification support:
 
   - Added NotificationCenter including SQL representations for activitities, notifications, resource and watchers.
