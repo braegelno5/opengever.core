@@ -98,8 +98,8 @@ class TestMemberships(FunctionalTestCase):
 
         self.assertEqual(['There were some errors.'], error_messages())
         self.assertEqual(
-            ["Can't change membership, it overlaps an existing membership from
-            Jan 01, 2003 to Jan 01, 2007"],
+            ["Can't change membership, it overlaps an existing membership from "
+             "Jan 01, 2003 to Jan 01, 2007"],
             browser.css('div#content-core div.error').text)
 
     def test_not_started_membership_is_inactive(self):
