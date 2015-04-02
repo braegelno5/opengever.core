@@ -5,6 +5,9 @@ Changelog
 4.3.1 (unreleased)
 ------------------
 
+- Order Memberships on date_from date by default.
+  [phgross]
+
 - Add memberhip_id column to membership table.
   [phgross]
 
