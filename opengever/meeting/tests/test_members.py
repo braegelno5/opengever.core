@@ -151,3 +151,17 @@ class TestMemberView(FunctionalTestCase):
         link = browser.css('a.remove_membership').first
         self.assertEqual(self.membership_2.get_remove_url(self.container),
                          link.get('href'))
+
+    @browsing
+    def test_remove_membership_works_correctly(self, browser):
+        browser.login().open(self.member.get_url(self.container))
+        self.assertEqual(2, len(browser.css('#membership_listing').first.rows))
+
+        link = browser.css('a.remove_membership').first
+        link.click()
+
+        self.assertEqual(['The membership was deleted successfully'],
+                         info_messages())
+        self.assertEqual(1, len(browser.css('#membership_listing').first.rows))
+        self.assertEqual(['My Committee Jan 01, 2008 Jan 01, 2015 Leitung'],
+                         browser.css('#membership_listing').first.rows.text)
