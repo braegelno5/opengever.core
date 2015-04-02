@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2015-01-22 16:48+0000\n"
-"PO-Revision-Date: 2015-01-22 17:49+0100\n"
+"POT-Creation-Date: 2015-04-02 13:47+0000\n"
+"PO-Revision-Date: 2015-04-02 15:59+0200\n"
 "Last-Translator: Jonas Baumann <j.baumann@4teamwork.ch>\n"
 "Language-Team: 4teamwork <info@4teamwork.ch>\n"
 "MIME-Version: 1.0\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Preferred-Encodings: utf-8 latin1\n"
 "Domain: DOMAIN\n"
 
-#: ./opengever/dossier/move_items.py:156
+#: ./opengever/dossier/move_items.py:148
 msgid "${copied_items} Elements were moved successfully"
 msgstr "${copied_items} Elemente wurden erfolgreich verschoben"
 
@@ -43,8 +43,8 @@ msgstr "Report konnte nicht generiert werden."
 msgid "Delete"
 msgstr "Beteiligung löschen"
 
-#: ./opengever/dossier/move_items.py:104
-msgid "Document ${name} is connected to a Task.                    Please move the Task."
+#: ./opengever/dossier/move_items.py:96
+msgid "Document ${name} is connected to a Task. Please move the Task."
 msgstr "Dokument ${name} ist mit einer Aufgabe verbunden, bitte Aufgabe verschieben."
 
 #: ./opengever/dossier/resolve.py:80
@@ -60,15 +60,15 @@ msgstr "Subdossier bearbeiten"
 msgid "Export selection"
 msgstr "Auswahl exportieren"
 
-#: ./opengever/dossier/move_items.py:162
+#: ./opengever/dossier/move_items.py:154
 msgid "Failed to copy following objects: ${failed_objects}"
 msgstr "Folgende Elemente konnten nicht verschoben werden: ${failed_objects}"
 
-#: ./opengever/dossier/move_items.py:168
+#: ./opengever/dossier/move_items.py:160
 msgid "Failed to copy following objects: ${failed_objects}                    . Locked via WebDAV"
 msgstr ""
 
-#: ./opengever/dossier/move_items.py:209
+#: ./opengever/dossier/move_items.py:201
 msgid "It isn't allowed to add such items there"
 msgstr "Sie dürfen dieses Objekt nicht an den Zielort verschieben"
 
@@ -84,7 +84,7 @@ msgstr "Elemente verschieben"
 msgid "Not all required fields are filled"
 msgstr "Nicht alle benötigten Felder wurden ausgefüllt."
 
-#: ./opengever/dossier/templatedossier/form.py:119
+#: ./opengever/dossier/templatedossier/form.py:106
 msgid "Not found the templatedossier"
 msgstr "Es sind keine Vorlagen vorhanden."
 
@@ -145,7 +145,7 @@ msgstr "Das Ende-Datum ist ungültig, es muss jünger oder gleich sein wie das D
 msgid "The given value is not a valid Year"
 msgstr "Das angegeben Ablagejahr ist ungültig."
 
-#: ./opengever/dossier/move_items.py:89
+#: ./opengever/dossier/move_items.py:88
 msgid "The selected objects can't be found, please try it again."
 msgstr "Die selektierten Objekte konnten nicht gefunden werden, bitte versuchen Sie es erneut."
 
@@ -169,7 +169,7 @@ msgstr "Dieses Subdossier kann nicht wieder aktiviert werden, da das Hauptdossie
 msgid "When the Action give filing number is selected,                         all fields are required."
 msgstr "Für die Vergabe der Ablagenummer, werden alle Felder benötigt."
 
-#: ./opengever/dossier/move_items.py:192
+#: ./opengever/dossier/move_items.py:184
 msgid "You have not selected any items"
 msgstr "Sie haben kein Element ausgewählt"
 
@@ -177,7 +177,7 @@ msgid "additional_attributes"
 msgstr "Zusatzattribute"
 
 #. Default: "Add"
-#: ./opengever/dossier/behaviors/participation.py:151
+#: ./opengever/dossier/behaviors/participation.py:153
 msgid "button_add"
 msgstr "Erstellen"
 
@@ -188,13 +188,13 @@ msgstr "Speichern"
 
 #. Default: "Cancel"
 #: ./opengever/dossier/archive.py:271
-#: ./opengever/dossier/behaviors/participation.py:164
-#: ./opengever/dossier/move_items.py:133
+#: ./opengever/dossier/behaviors/participation.py:166
+#: ./opengever/dossier/move_items.py:125
 msgid "button_cancel"
 msgstr "Abbrechen"
 
 #. Default: "Move"
-#: ./opengever/dossier/move_items.py:74
+#: ./opengever/dossier/move_items.py:73
 msgid "button_submit"
 msgstr "Verschieben"
 
@@ -209,7 +209,7 @@ msgid "column_rolelist"
 msgstr "Rolle"
 
 #. Default: "create document with template"
-#: ./opengever/dossier/templatedossier/form.py:30
+#: ./opengever/dossier/templatedossier/form.py:28
 msgid "create_document_with_template"
 msgstr "Dokument aus Vorlage erstellen"
 
@@ -220,7 +220,7 @@ msgid "documents"
 msgstr "Dokumente"
 
 #. Default: "It isn't allowed to add such items there: ${failed_objects}"
-#: ./opengever/dossier/move_items.py:240
+#: ./opengever/dossier/move_items.py:232
 msgid "error_NotInContentTypes ${failed_objects}"
 msgstr "Es wurden keine Objekte verschoben. Folgende Objekte dürfen nicht in den Zielordner eingefügt werden: ${failed_objects}"
 
@@ -288,7 +288,7 @@ msgid "heading_archive_form"
 msgstr "Dossier ablegen"
 
 #. Default: "Move Items"
-#: ./opengever/dossier/move_items.py:56
+#: ./opengever/dossier/move_items.py:55
 msgid "heading_move_items"
 msgstr "Elemente verschieben"
 
@@ -296,7 +296,7 @@ msgstr "Elemente verschieben"
 msgid "help_comments"
 msgstr ""
 
-#: ./opengever/dossier/behaviors/participation.py:91
+#: ./opengever/dossier/behaviors/participation.py:92
 msgid "help_contact"
 msgstr "Wählen Sie einen Benutzer oder einen Kontakt aus."
 
@@ -309,7 +309,7 @@ msgid "help_container_type"
 msgstr "Art des Behälters, in dem ein Dossier in Papierform abgelegt ist"
 
 #. Default: "Live Search: search the Plone Site"
-#: ./opengever/dossier/move_items.py:27
+#: ./opengever/dossier/move_items.py:26
 msgid "help_destination"
 msgstr "Live Search: Durchsuchen Sie diesen Mandanten"
 
@@ -351,7 +351,7 @@ msgstr ""
 msgid "help_responsible"
 msgstr ""
 
-#: ./opengever/dossier/behaviors/participation.py:98
+#: ./opengever/dossier/behaviors/participation.py:99
 msgid "help_roles"
 msgstr ""
 
@@ -364,12 +364,12 @@ msgid "help_temporary_former_reference_number"
 msgstr ""
 
 #. Default: "Participation created"
-#: ./opengever/dossier/behaviors/participation.py:159
+#: ./opengever/dossier/behaviors/participation.py:161
 msgid "info_participation_create"
 msgstr "Die Beteiligung wurde gespeichert."
 
 #. Default: "Removed participations"
-#: ./opengever/dossier/behaviors/participation.py:204
+#: ./opengever/dossier/behaviors/participation.py:206
 msgid "info_removed_participations"
 msgstr "Die Beteiligungen wurde entfernt."
 
@@ -389,7 +389,7 @@ msgid "label_comments"
 msgstr "Kommentar"
 
 #. Default: "Contact"
-#: ./opengever/dossier/behaviors/participation.py:90
+#: ./opengever/dossier/behaviors/participation.py:91
 msgid "label_contact"
 msgstr "Person"
 
@@ -404,12 +404,12 @@ msgid "label_container_type"
 msgstr "Behältnis-Art"
 
 #. Default: "Creator"
-#: ./opengever/dossier/templatedossier/form.py:143
+#: ./opengever/dossier/templatedossier/form.py:130
 msgid "label_creator"
 msgstr "Erstellt von"
 
 #. Default: "Destination"
-#: ./opengever/dossier/move_items.py:26
+#: ./opengever/dossier/move_items.py:25
 msgid "label_destination"
 msgstr "Zielposition / Zieldossier"
 
@@ -457,7 +457,7 @@ msgid "label_keywords"
 msgstr "Schlagworte"
 
 #. Default: "Modified"
-#: ./opengever/dossier/templatedossier/form.py:146
+#: ./opengever/dossier/templatedossier/form.py:133
 msgid "label_modified"
 msgstr "Zuletzt Bearbeitet"
 
@@ -472,7 +472,7 @@ msgid "label_number_of_containers"
 msgstr "Anzahl Behältnisse"
 
 #. Default: "Participation"
-#: ./opengever/dossier/behaviors/participation.py:147
+#: ./opengever/dossier/behaviors/participation.py:148
 msgid "label_participation"
 msgstr "Beteiligung"
 
@@ -501,7 +501,7 @@ msgid "label_review_state"
 msgstr "Status"
 
 #. Default: "Roles"
-#: ./opengever/dossier/behaviors/participation.py:97
+#: ./opengever/dossier/behaviors/participation.py:98
 msgid "label_roles"
 msgstr "Rollen"
 
@@ -529,7 +529,7 @@ msgstr "Vorlage"
 
 #. Default: "title"
 #: ./opengever/dossier/browser/report.py:33
-#: ./opengever/dossier/templatedossier/form.py:139
+#: ./opengever/dossier/templatedossier/form.py:126
 #: ./opengever/dossier/templatedossier/form_templates/template_form.pt:30
 msgid "label_title"
 msgstr "Titel"
@@ -617,7 +617,7 @@ msgid "time_expired"
 msgstr "abgelaufen"
 
 #. Default: "You didn't select any participants."
-#: ./opengever/dossier/behaviors/participation.py:194
+#: ./opengever/dossier/behaviors/participation.py:196
 msgid "warning_no_participants_selected"
 msgstr "Sie haben keine Beteiligungen ausgewählt."
 

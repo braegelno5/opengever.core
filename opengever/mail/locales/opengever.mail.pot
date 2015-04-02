@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2014-09-01 15:27+0000\n"
+"POT-Creation-Date: 2015-04-02 13:47+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -71,12 +71,12 @@ msgid "column_attachment_type"
 msgstr ""
 
 #. Default: "You have not selected any attachments."
-#: ./opengever/mail/browser/extract_attachments.py:155
+#: ./opengever/mail/browser/extract_attachments.py:154
 msgid "error_no_attachments_selected"
 msgstr ""
 
 #. Default: "This mail has no attachments to extract."
-#: ./opengever/mail/browser/extract_attachments.py:142
+#: ./opengever/mail/browser/extract_attachments.py:141
 msgid "error_no_attachments_to_extract"
 msgstr ""
 
@@ -119,7 +119,7 @@ msgid "help_subject"
 msgstr ""
 
 #. Default: "Created document ${title}"
-#: ./opengever/mail/browser/extract_attachments.py:227
+#: ./opengever/mail/browser/extract_attachments.py:204
 msgid "info_extracted_document"
 msgstr ""
 
@@ -184,7 +184,7 @@ msgid "label_message"
 msgstr ""
 
 #. Default: "Original message"
-#: ./opengever/mail/browser/mail.py:77
+#: ./opengever/mail/browser/mail.py:78
 msgid "label_org_message"
 msgstr ""
 
@@ -199,7 +199,7 @@ msgid "label_subject"
 msgstr ""
 
 #. Default: "Title"
-#: ./opengever/mail/mail.py:56
+#: ./opengever/mail/mail.py:58
 msgid "label_title"
 msgstr ""
 

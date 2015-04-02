@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2014-09-18 12:15+0000\n"
+"POT-Creation-Date: 2015-04-02 13:47+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -55,3 +55,4 @@ msgstr "Um ein Favorit zu entfernen, wechseln Sie zurück in den Reiter «Ordnun
 #: ./opengever/portlets/tree/treeportlet.pt:38
 msgid "tree_favorites_help_summary"
 msgstr "Das Markieren und Entfernen von Favoriten geschieht über den Ordnungssystem-Reiter."
+

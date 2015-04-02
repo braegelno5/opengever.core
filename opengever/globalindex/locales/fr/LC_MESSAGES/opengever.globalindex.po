@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2014-07-03 08:38+0000\n"
+"POT-Creation-Date: 2015-04-02 13:47+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,10 +22,6 @@ msgstr "Impossible de générer l'export de tâches"
 #: ./opengever/globalindex/upgrades/profiles/2601/actions.xml
 msgid "Export selection"
 msgstr "Exporter choix"
-
-#: ./opengever/globalindex/browser/cleartasks.py:46
-msgid "Global task index has been cleared (${cleared}) and rebuilt (${rebuilt})"
-msgstr ""
 
 #. Default: "You have not selected any Items"
 #: ./opengever/globalindex/browser/report.py:50
