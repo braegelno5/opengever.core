@@ -49,7 +49,7 @@ class XlsSource(object):
     def __init__(self, transmogrifier, name, options, previous):
         self.previous = previous
         self.options = options
-
+        self.sheets = options.get('sheets', None)
         self.path = resolvePackageReferenceOrFile(options['directory'])
         if self.path is None or not os.path.isdir(self.path):
             raise IOError('Directory does not exists: {}'.format(self.path))
@@ -71,11 +71,12 @@ class XlsSource(object):
             repository_id, extension = os.path.splitext(filename)
 
             keys, sheet_data = self.read_excel_file(xls_path)
+
             for rownum, row in enumerate(sheet_data):
                 yield self.process_row(row, rownum, keys, repository_id)
 
     def read_excel_file(self, xls_path):
-        tables = xlrd_xls2array(xls_path)
+        tables = xlrd_xls2array(xls_path, sheet_filter=self.sheets)
         repository_table = tables[0]
         sheet_data = repository_table['sheet_data']
 
@@ -135,16 +136,24 @@ class XlsSource(object):
 
 # Some of the following parts are based on
 # http://code.activestate.com/recipes/546518/
-def xlrd_xls2array(path):
+def xlrd_xls2array(path, sheet_filter=None):
     """ Returns a list of sheets; each sheet is a dict containing
     * sheet_name: unicode string naming that sheet
     * sheet_data: 2-D table holding the converted cells of that sheet
+
+    If sheet_filter, a list of sheet names, is given only those sheets will
+    be extraced.
     """
     book = xlrd.open_workbook(path)
     sheets = []
     formatter = lambda(t, v): format_excelval(book, t, v, False)
 
-    for sheet_name in book.sheet_names():
+    if sheet_filter:
+        sheet_names = sheet_filter
+    else:
+        sheet_names = book.sheet_names()
+
+    for sheet_name in sheet_names:
         raw_sheet = book.sheet_by_name(sheet_name)
         data = []
         for row in range(raw_sheet.nrows):

@@ -25,6 +25,13 @@
       configuration="cfgs/repository.cfg"
       />
 
+  <transmogrifier:registerConfig
+      name="opengever.setup.dossier"
+      title="Opengever dossier import"
+      description="Pipeline configuration for Opengever Setup"
+      configuration="cfgs/dossier.cfg"
+      />
+
   <utility
       component=".sections.xlssource.XlsSource"
       name="opengever.setup.xlssource"
@@ -73,6 +80,11 @@
   <utility
     component=".sections.modelconstructor.ModelConstructor"
     name="opengever.setup.modelconstructor"
+    />
+
+  <utility
+    component=".sections.pathbyparentsrefnum.PathByParentsRefnum"
+    name="opengever.setup.pathbyparentsrefnum"
     />
 
 </configure>

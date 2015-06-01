@@ -73,6 +73,7 @@ def opengever_content(setup):
     repositories(setup)
     templates(setup)
     local_role_configuration(setup)
+    dossiers(setup)
 
 
 def templates(setup):
@@ -110,6 +111,23 @@ class Repositories(BaseSetupHandler):
         transmogrifier(u'opengever.setup.repository',
                        xlssource=dict(directory=self.path))
 
+
+def dossiers(setup):
+    data = setup.isDirectory(REPOSITORIES_FOLDER_NAME)
+    if not data:
+        return
+
+    Dossiers(setup).install()
+
+
+class Dossiers(BaseSetupHandler):
+
+    folder_name = REPOSITORIES_FOLDER_NAME
+
+    def install(self):
+        transmogrifier = Transmogrifier(self.setup.getSite())
+        transmogrifier(u'opengever.setup.dossier',
+                       xlssource=dict(directory=self.path, sheets=['Dossiers']))
 
 def local_role_configuration(setup):
     """Create local role setup.
