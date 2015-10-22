@@ -2,6 +2,7 @@ from five import grok
 from opengever.activity import notification_center
 from opengever.activity.browser import resolve_notification_url
 from opengever.activity.browser.listing import NotificationListingTab
+from opengever.base.response import JSONResponse
 from plone import api
 from Products.Five import BrowserView
 from zope.browserpage.viewpagetemplatefile import ViewPageTemplateFile
@@ -44,9 +45,10 @@ class NotificationView(BrowserView):
             offset=offset)
 
         next_url = self.get_next_batch_url(page, batch_size, total, offset)
-        return self.json_response({
-            'next_page': next_url,
-            'notifications': self.dump_notifications(notifications)})
+        json_response = JSONResponse(self.request).data(
+            next_page=next_url,
+            notifications=self.dump_notifications(notifications))
+        return json_response.dump()
 
     def get_next_batch_url(self, current_page, batch_size, total, offset):
         """Checks if there is a next page, thus it returns the prepared url
@@ -56,13 +58,6 @@ class NotificationView(BrowserView):
             return '{}/notifications/list?page={}&batch_size={}'.format(
                 self.context.absolute_url(), current_page + 1, batch_size)
         return None
-
-    def json_response(self, data):
-        response = self.request.response
-        response.setHeader('Content-Type', 'application/json')
-        response.setHeader('X-Theme-Disabled', 'True')
-        response.enableHTTPCompression(REQUEST=self.request)
-        return json.dumps(data)
 
     def dump_notifications(self, notifications):
         data = []
