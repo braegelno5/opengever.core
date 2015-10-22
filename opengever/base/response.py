@@ -71,4 +71,6 @@ class JSONResponse(object):
 
     def dump(self):
         self.request.response.setHeader("Content-type", "application/json")
+        self.request.response.setHeader('X-Theme-Disabled', 'True')
+        self.request.response.enableHTTPCompression(REQUEST=self.request)
         return json.dumps(self.response)
