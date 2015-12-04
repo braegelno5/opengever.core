@@ -21,7 +21,7 @@ class AddPeriods(SchemaMigration):
     def create_periods_table(self):
         self.periods_table = self.op.create_table(
             'periods',
-            Column('id', Integer, primary_key=True),
+            Column('id', Integer, Sequence('period_id_seq'), primary_key=True),
             Column('committee_id', Integer,
                    ForeignKey('committees.id'), nullable=False),
             Column("workflow_state", String(255), nullable=False,
