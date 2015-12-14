@@ -594,4 +594,13 @@
         provides="Products.GenericSetup.interfaces.EXTENSION"
         />
 
+    <!-- 4627 -> 4628 -->
+    <upgrade-step:importProfile
+            title="Register datetimepicker javascript."
+            profile="opengever.meeting:default"
+            source="4627"
+            destination="4628"
+            directory="profiles/4628"
+        />
+
 </configure>

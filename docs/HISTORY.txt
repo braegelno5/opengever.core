@@ -5,6 +5,9 @@ Changelog
 4.6.1 (unreleased)
 ------------------
 
+- Use bootstrap datetimepicker for selecting date and time for meetings.
+  [Kevin Bieri]
+
 - Include ftw.profilehook, when required.
   [deiferni]
 
