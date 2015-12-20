@@ -9,10 +9,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0\n"
-"Language-Code: en\n"
-"Language-Name: English\n"
 "Preferred-Encodings: utf-8 latin1\n"
-"Domain: DOMAIN\n"
 
 #: ./opengever/document/browser/edit.py:104
 msgid "Can't edit the document at moment, beacuse it's locked."
@@ -105,7 +102,7 @@ msgstr "Als E-Mail versenden"
 #: ./opengever/document/profiles/default/actions.xml
 #: ./opengever/document/upgrades/profiles/4200/actions.xml
 msgid "Submit additional documents"
-msgstr "Zusätzliche Anhänge einreichen"
+msgstr "Dokumente nachreichen"
 
 #: ./opengever/document/browser/overview.py:165
 msgid "Submitted version: ${version}"
@@ -500,4 +497,5 @@ msgstr "Mit Kommentar"
 #: ./opengever/document/upgrades/profiles/4000/actions.xml
 msgid "without comment"
 msgstr "Ohne Kommentar"
+
 

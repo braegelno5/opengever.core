@@ -12,10 +12,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0\n"
-"Language-Code: en\n"
-"Language-Name: English\n"
 "Preferred-Encodings: utf-8 latin1\n"
-"Domain: DOMAIN\n"
 
 #. Default: "Actor"
 #: ./opengever/activity/browser/listing.py:58
@@ -35,7 +32,7 @@ msgstr "Titre"
 #. Default: "Created"
 #: ./opengever/activity/browser/listing.py:63
 msgid "created"
-msgstr ""
+msgstr "Créé"
 
 #. Default: "Notifications"
 #: ./opengever/activity/viewlets/notification.pt:3
@@ -71,4 +68,5 @@ msgstr ""
 #: ./opengever/activity/mail.py:78
 msgid "subject_prefix"
 msgstr ""
+
 

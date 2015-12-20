@@ -9,10 +9,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0\n"
-"Language-Code: en\n"
-"Language-Name: English\n"
 "Preferred-Encodings: utf-8 latin1\n"
-"Domain: DOMAIN\n"
 
 #: ./opengever/inbox/browser/overview.py:41
 msgid "Documents"
@@ -81,7 +78,7 @@ msgstr "Erhaltene Aufgaben"
 #. Default: "Forwarding added"
 #: ./opengever/inbox/activities.py:27
 msgid "label_forwarding_added"
-msgstr "Weiterleitung hinzugefügt"
+msgstr "Neue Weiterleitung hinzugefügt durch ${user}"
 
 #. Default: "Inbox Group"
 #: ./opengever/inbox/inbox.py:21
@@ -127,3 +124,5 @@ msgstr "Weiterleitung abschliessen"
 #: ./opengever/inbox/yearfolder.py:39
 msgid "yearfolder_title"
 msgstr "Abgeschlossen ${year}"
+
+

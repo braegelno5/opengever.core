@@ -12,10 +12,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0\n"
-"Language-Code: en\n"
-"Language-Name: English\n"
 "Preferred-Encodings: utf-8 latin1\n"
-"Domain: DOMAIN\n"
 
 #: ./opengever/base/browser/list_groupmembers.pt:5
 msgid "(INACTIVE)"
@@ -146,7 +143,7 @@ msgstr ""
 
 #: ./opengever/base/behaviors/classification.py:76
 msgid "help_public_trial_statement"
-msgstr "Date de la requête, requérant, date de la décision, Référence vers le dossier de la requête GEVER"
+msgstr "Date requise, ?, Date de décision,"
 
 #: ./opengever/base/behaviors/lifecycle.py:42
 msgid "help_retention_period"
@@ -159,7 +156,7 @@ msgstr ""
 #. Default: "-- Already removed object --"
 #: ./opengever/base/adapters.py:193
 msgid "label_already_removed"
-msgstr "-- Déjà annulé --"
+msgstr "Déjà supprimé"
 
 #. Default: "Archival value"
 #: ./opengever/base/behaviors/lifecycle.py:57
@@ -295,7 +292,7 @@ msgstr ""
 #. Default: "limited-public"
 #: opengever/repository/classification.py
 msgid "limited-public"
-msgstr "Accès public restreint"
+msgstr "Accès restreint"
 
 #. Default: "Error"
 #: ./opengever/base/response.py:41
@@ -385,3 +382,5 @@ msgstr "Non contrôlé"
 #: opengever/repository/classification.py
 msgid "unprotected"
 msgstr "Non classé"
+
+

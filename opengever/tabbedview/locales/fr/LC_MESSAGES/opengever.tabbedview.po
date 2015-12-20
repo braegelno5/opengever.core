@@ -9,10 +9,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0\n"
-"Language-Code: en\n"
-"Language-Name: English\n"
 "Preferred-Encodings: utf-8 latin1\n"
-"Domain: DOMAIN\n"
 
 #: ./opengever/tabbedview/browser/generic_dossier.pt:62
 #: ./opengever/tabbedview/browser/selection_dossier.pt:24
@@ -431,4 +428,5 @@ msgstr "Titre"
 
 msgid "trash"
 msgstr "Corbeille"
+
 

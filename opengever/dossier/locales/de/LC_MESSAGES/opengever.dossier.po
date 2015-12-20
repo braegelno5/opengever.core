@@ -9,10 +9,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0\n"
-"Language-Code: en\n"
-"Language-Name: English\n"
 "Preferred-Encodings: utf-8 latin1\n"
-"Domain: DOMAIN\n"
 
 #: ./opengever/dossier/move_items.py:150
 msgid "${copied_items} Elements were moved successfully"
@@ -642,4 +639,5 @@ msgstr "abgelaufen"
 #: ./opengever/dossier/behaviors/participation.py:197
 msgid "warning_no_participants_selected"
 msgstr "Sie haben keine Beteiligungen ausgewählt."
+
 

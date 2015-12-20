@@ -11,10 +11,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"Language-Code: en\n"
-"Language-Name: English\n"
 "Preferred-Encodings: utf-8 latin1\n"
-"Domain: DOMAIN\n"
 "X-Is-Fallback-For: de-at de-li de-lu de-ch de-de\n"
 
 #: ./opengever/repository/browser/templates/referenceprefixmanager.pt:40
@@ -218,4 +215,5 @@ msgstr "Aufgaben"
 #: ./opengever/repository/browser/templates/referenceprefixmanager.pt:25
 msgid "unlock"
 msgstr "Freigeben"
+
 

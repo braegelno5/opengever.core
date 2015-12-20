@@ -9,10 +9,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0\n"
-"Language-Code: en\n"
-"Language-Name: English\n"
 "Preferred-Encodings: utf-8 latin1\n"
-"Domain: DOMAIN\n"
 
 #: ./opengever/setup/browser/adddeployment.pt:78
 msgid "- skip LDAP -"
@@ -69,4 +66,5 @@ msgstr ""
 #: ./opengever/setup/browser/adddeployment.pt:112
 msgid "Use \"og_demo-ftw_users\" group for OrgUnits and local role configuration"
 msgstr ""
+
 

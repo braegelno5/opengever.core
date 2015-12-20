@@ -9,10 +9,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0\n"
-"Language-Code: en\n"
-"Language-Name: English\n"
 "Preferred-Encodings: utf-8 latin1\n"
-"Domain: DOMAIN\n"
 
 #. Default: "Journal"
 #: ./opengever/journal/templates/journalhistory.pt:15
@@ -27,7 +24,7 @@ msgstr "Geändert von"
 #. Default: "Attachments deleted: ${filenames}"
 #: ./opengever/journal/handlers.py:316
 msgid "label_attachments_deleted"
-msgstr "Attachments gelöscht: ${filenames}"
+msgstr "Attachments gelöscht: ${titles}"
 
 #. Default: "Comments"
 #: ./opengever/journal/tab.py:73
@@ -228,4 +225,5 @@ msgstr "Journal"
 #: ./opengever/journal/no_selection_amount.pt:3
 msgid "tab_matches"
 msgstr "${amount} Treffer."
+
 

@@ -9,10 +9,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0\n"
-"Language-Code: en\n"
-"Language-Name: English\n"
 "Preferred-Encodings: utf-8 latin1\n"
-"Domain: DOMAIN\n"
 
 #: ./opengever/repository/browser/templates/referenceprefixmanager.pt:40
 msgid "In use"
@@ -101,12 +98,12 @@ msgstr "Types de dossiers à ajouter"
 #. Default: "Delete"
 #: ./opengever/repository/browser/deletion_templates/deletion.pt:32
 msgid "label_delete"
-msgstr "Effacer"
+msgstr "Supprimer"
 
 #. Default: "Delete repository"
 #: ./opengever/repository/browser/deletion_templates/deletion.pt:20
 msgid "label_delete_repository"
-msgstr "Effacer le numéro de la position"
+msgstr "Supprimer la position de classement"
 
 #. Default: "Description"
 #: ./opengever/repository/repositoryfolder.py:40
@@ -136,7 +133,7 @@ msgstr "Performance"
 #. Default: "The repository have been successfully deleted."
 #: ./opengever/repository/browser/deletion.py:38
 msgid "label_successfully_deleted"
-msgstr "Le numéro de la position a été effacé avec succès."
+msgstr "La position de classement a été supprimée avec succès"
 
 #. Default: "Valid from"
 #: ./opengever/repository/repositoryfolder.py:48
@@ -168,7 +165,7 @@ msgstr "Etat"
 #. Default: "Do you really want to delete the current repository?"
 #: ./opengever/repository/browser/deletion_templates/deletion.pt:26
 msgid "msg_delete_confirmation"
-msgstr "Voulez-vous vraiment effacer le numéro de la position actuel?"
+msgstr "Voulez-vous vraiment supprimer la position de classement actuelle?"
 
 #. Default: "Name"
 #: ./opengever/repository/browser/templates/referenceprefixmanager.pt:24
@@ -214,4 +211,5 @@ msgstr "Tâches"
 #: ./opengever/repository/browser/templates/referenceprefixmanager.pt:25
 msgid "unlock"
 msgstr "Libérer"
+
 

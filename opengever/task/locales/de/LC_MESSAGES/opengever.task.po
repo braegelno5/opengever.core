@@ -9,10 +9,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0\n"
-"Language-Code: en\n"
-"Language-Name: English\n"
 "Preferred-Encodings: utf-8 latin1\n"
-"Domain: DOMAIN\n"
 
 #: ./opengever/task/browser/close.py:249
 msgid "${num} documents were copied."
@@ -464,7 +461,7 @@ msgstr "Dokumente"
 #. Default: "Dossier title"
 #: ./opengever/task/activities.py:138
 msgid "label_dossier_title"
-msgstr "Dossiertitel"
+msgstr "Dossier Titel"
 
 #. Default: "You are not allowed to edit this response."
 #: ./opengever/task/templates/edit_response.pt:44
@@ -753,7 +750,7 @@ msgstr "Unteraufgabe ${task} hinzugefügt durch ${user}"
 #. Default: "Task accepted"
 #: ./opengever/task/response_description.py:146
 msgid "transition_label_accept"
-msgstr "Aufgabe akzeptiert"
+msgstr "Akzeptiert durch ${user}"
 
 #. Default: "Document added to Task"
 #: ./opengever/task/response_description.py:317
@@ -768,7 +765,7 @@ msgstr "Unteraufgabe zur Aufgabe hinzugefügt"
 #. Default: "Forwarding assigned to Dossier"
 #: ./opengever/task/response_description.py:274
 msgid "transition_label_assign_to_dossier"
-msgstr "Weiterleitung zu einem Dossier hinzugefügt"
+msgstr "Einem Dossier zugewiesen durch ${user} Nachfolgeaufgabe=${successor}"
 
 #. Default: "Task cancelled"
 #: ./opengever/task/response_description.py:130
@@ -778,7 +775,7 @@ msgstr "Aufgabe storniert"
 #. Default: "Task closed"
 #: ./opengever/task/response_description.py:116
 msgid "transition_label_close"
-msgstr "Aufgabe abgeschlossen"
+msgstr "Abgeschlossen durch ${user}"
 
 #. Default: "Created by ${user}"
 #: ./opengever/task/viewlets/response.py:68
@@ -789,47 +786,47 @@ msgstr "Erstellt durch ${user}"
 #: ./opengever/task/activities.py:103
 #: ./opengever/task/response_description.py:49
 msgid "transition_label_default"
-msgstr "Aufgabe hinzugefügt"
+msgstr "Antwort hinzugefügt"
 
 #. Default: "Task deadline modified"
 #: ./opengever/task/response_description.py:224
 msgid "transition_label_modify_deadline"
-msgstr "Aufgabenfrist verändert"
+msgstr "Frist geändert von ${deadline_old} zu ${deadline_new} durch ${user}"
 
 #. Default: "Task reactivated"
 #: ./opengever/task/response_description.py:68
 msgid "transition_label_reactivate"
-msgstr "Aufgabe reaktiviert"
+msgstr "Reaktiviert durch ${user}"
 
 #. Default: "Task reassigned"
 #: ./opengever/task/response_description.py:199
 msgid "transition_label_reassign"
-msgstr "Aufgabe neu zugewiesen"
+msgstr "Neu zugewiesen von ${responsible_old} an ${responsible_new} durch ${user}"
 
 #. Default: "Forwarding refused"
 #: ./opengever/task/response_description.py:254
 msgid "transition_label_refuse"
-msgstr "Weiterleitung abgelehnt"
+msgstr "Abgelehnt durch ${user}"
 
 #. Default: "Task rejected"
 #: ./opengever/task/response_description.py:82
 msgid "transition_label_reject"
-msgstr "Aufgabe abgelehnt"
+msgstr "Abgelehnt durch ${user}"
 
 #. Default: "Task reopened"
 #: ./opengever/task/response_description.py:161
 msgid "transition_label_reopen"
-msgstr "Aufgaben wieder eröffnet"
+msgstr "Wieder eröffnet durch ${user}"
 
 #. Default: "Task resolved"
 #: ./opengever/task/response_description.py:98
 msgid "transition_label_resolve"
-msgstr "Aufgabe erledigt"
+msgstr "Erledigt durch ${user}"
 
 #. Default: "Task revised"
 #: ./opengever/task/response_description.py:176
 msgid "transition_label_revise"
-msgstr "Überarbeitung der Aufgabe angefordert"
+msgstr "Überarbeitung angefordert durch ${user}"
 
 #. Default: "Accepted by ${user}"
 #: ./opengever/task/response_description.py:142
@@ -916,4 +913,5 @@ msgstr "Dokument von Aufgabe kopiert (Aufgabe abgeschlossen)"
 #: ./opengever/task/browser/complete.py:291
 msgid "version_message_resolved_task"
 msgstr "Dokument von Aufgabe kopiert (Aufgabe erledigt)"
+
 

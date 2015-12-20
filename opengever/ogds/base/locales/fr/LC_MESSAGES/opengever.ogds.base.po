@@ -9,10 +9,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0\n"
-"Language-Code: en\n"
-"Language-Name: English\n"
 "Preferred-Encodings: utf-8 latin1\n"
-"Domain: DOMAIN\n"
 
 #: ./opengever/ogds/base/profiles/default/actions.xml
 #: ./opengever/ogds/base/upgrades/profiles/4002/actions.xml
@@ -108,4 +105,5 @@ msgstr "Site Internet"
 #: ./opengever/ogds/base/browser/userdetails_templates/userdetails.pt:22
 msgid "link_all_users"
 msgstr "Afficher tous les utilisateurs"
+
 
