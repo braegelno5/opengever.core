@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2015-12-15 14:34+0000\n"
+"POT-Creation-Date: 2015-12-22 08:43+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -263,11 +263,11 @@ msgid "Proposals:"
 msgstr ""
 
 #: ./opengever/meeting/browser/meetings/templates/meeting.pt:169
-#: ./opengever/meeting/model/meeting.py:244
+#: ./opengever/meeting/model/meeting.py:243
 msgid "Protocol"
 msgstr "Procès-verbal"
 
-#: ./opengever/meeting/model/meeting.py:247
+#: ./opengever/meeting/model/meeting.py:246
 msgid "Protocol Excerpt"
 msgstr ""
 
