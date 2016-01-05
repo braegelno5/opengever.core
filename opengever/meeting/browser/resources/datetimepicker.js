@@ -2,7 +2,7 @@
 
   "use strict";
 
-  $.fn.datetimepicker.dates.de = {
+  $.fn.datetimepicker.dates.de = $.fn.datetimepicker.dates["de-ch"] = {
     days: ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"],
     daysShort: ["Son", "Mon", "Die", "Mit", "Don", "Fre", "Sam", "Son"],
     daysMin: ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"],
@@ -69,10 +69,15 @@
       startView: 1,
       minuteStep: 5,
       viewSelect: "year",
-      language: lang
+      language: lang,
+      time: true
     }, options);
 
     this.element = $(options.target);
+
+    if(!options.time) {
+      options.format = $.fn.datetimepicker.dates[lang].format.replace(/[hi:]/gi, "").trim();
+    }
 
     var roundMinutes = function(date, precision) { return new Date(date.setMinutes(Math.ceil(date.getMinutes() / precision) * precision)); };
 
@@ -100,78 +105,38 @@
 
   };
 
+  Datetimepicker.applyTimezone = applyTimezone;
+
+  global.Datetimepicker = Datetimepicker;
+
   var Rangetimepicker = function(options) {
 
     options = $.extend({
-      minRange: true,
-      defaultRange: 1,
-      target: {
-        start: ".datetimepicker-start",
-        end: ".datetimepicker-end"
-      }
+      minRange: 1,
+      start: {},
+      end: {}
     }, options);
 
-    var self = this;
+    var adjustEndtime = function(start) {
+      var end = new Date(new Date(start).setHours(start.getHours() + options.minRange));
+      options.end.setDate(end);
+    };
 
-    this.start = new Datetimepicker({ target: options.target.start });
-    this.end = new Datetimepicker({ target: options.target.end });
-
-    var adjustEndtime = $.proxy(function(start) {
-      var end = new Date(new Date(start).setHours(start.getHours() + options.defaultRange));
-      this.end.setDate(end);
-    }, this);
-
-    var updateDate = $.proxy(function(date) {
-      if(options.minRange && date >= this.end.date) {
+    var updateDate = function(date) {
+      if(options.minRange && (options.end.date - date) < (options.minRange * 60 * 60 * 1000)) {
         adjustEndtime(date);
       }
-      this.end.setStartDate(date);
-      this.start.setDate(date);
-    }, this);
+      options.end.setStartDate(date);
+      options.start.setDate(date);
+    };
 
-    updateDate(this.start.date);
+    updateDate(options.start.date);
 
-    this.start.on("changeDate", function(event) { updateDate(event.date); });
-    this.end.on("changeDate", function(event) { self.end.setDate(event.date); });
+    options.start.on("changeDate", function(event) { updateDate(event.date); });
+    options.end.on("changeDate", function(event) { options.end.setDate(event.date); });
 
   };
 
-  $(function() {
-
-    var start = $("<input class='spv-datetime-widget' type='text' />");
-    var end = $("<input class='spv-datetime-widget' type='text' />");
-
-    start.insertAfter("#formfield-form-widgets-start > label");
-    end.insertAfter("#formfield-form-widgets-end > label");
-
-    var range = new Rangetimepicker({
-      target: {
-        start: start,
-        end: end
-      }
-    });
-
-    var applyPloneWidget = function() {
-      var startDate = applyTimezone(new Date(range.start.date));
-      $("#form-widgets-start-day").attr("value", startDate.getDate());
-      $("#form-widgets-start-month").attr("value", startDate.getMonth() + 1);
-      $("#form-widgets-start-year").attr("value", startDate.getFullYear());
-      $("#form-widgets-start-hour").attr("value", startDate.getHours());
-      $("#form-widgets-start-min").attr("value", startDate.getMinutes());
-
-      var endDate = applyTimezone(new Date(range.end.date));
-      $("#form-widgets-end-day").attr("value", endDate.getDate());
-      $("#form-widgets-end-month").attr("value", endDate.getMonth() + 1);
-      $("#form-widgets-end-year").attr("value", endDate.getFullYear());
-      $("#form-widgets-end-hour").attr("value", endDate.getHours());
-      $("#form-widgets-end-min").attr("value", endDate.getMinutes());
-    };
-
-    range.start.on("changeDate", applyPloneWidget);
-    range.end.on("changeDate", applyPloneWidget);
-
-
-  });
-
+  global.Rangetimepicker = Rangetimepicker;
 
 }(window, jQuery));

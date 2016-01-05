@@ -117,6 +117,36 @@
 
     var protocolController = new ProtocolController();
 
+    var start = $("<input class='spv-datetime-widget' type='text' />");
+    var end = $("<input class='spv-datetime-widget' type='text' />");
+
+    start.insertAfter("#formfield-form-widgets-start > label");
+    end.insertAfter("#formfield-form-widgets-end > label");
+
+    start = new global.Datetimepicker({ target: start });
+    end = new global.Datetimepicker({ target: end });
+
+    var range = new global.Rangetimepicker({ start: start, end: end });
+
+    var applyPloneWidget = function() {
+      var startDate = global.Datetimepicker.applyTimezone(new Date(start.date));
+      $("#form-widgets-start-day").attr("value", startDate.getDate());
+      $("#form-widgets-start-month").attr("value", startDate.getMonth() + 1);
+      $("#form-widgets-start-year").attr("value", startDate.getFullYear());
+      $("#form-widgets-start-hour").attr("value", startDate.getHours());
+      $("#form-widgets-start-min").attr("value", startDate.getMinutes());
+
+      var endDate = global.Datetimepicker.applyTimezone(new Date(end.date));
+      $("#form-widgets-end-day").attr("value", endDate.getDate());
+      $("#form-widgets-end-month").attr("value", endDate.getMonth() + 1);
+      $("#form-widgets-end-year").attr("value", endDate.getFullYear());
+      $("#form-widgets-end-hour").attr("value", endDate.getHours());
+      $("#form-widgets-end-min").attr("value", endDate.getMinutes());
+    };
+
+    start.on("changeDate", applyPloneWidget);
+    end.on("changeDate", applyPloneWidget);
+
   }
 
   $(function() {

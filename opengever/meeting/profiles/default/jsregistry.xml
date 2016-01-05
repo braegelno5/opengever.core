@@ -34,4 +34,9 @@
                 insert-after="++resource++opengever.base/datetimepicker.min.js"
                 />
 
+    <javascript cacheable="True" compression="safe" cookable="True" expression=""
+                enabled="True" id="++resource++opengever.meeting/membership.js" inline="False"
+                insert-after="++resource++opengever.meeting/datetimepicker.js"
+                />
+
 </object>
