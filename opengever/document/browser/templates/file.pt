@@ -33,10 +33,22 @@
             </tal:cond>
           </tal:preview_support>
           <tal:cond tal:condition="checkout_and_edit_available">
-            <a class="function-edit" href="#" i18n:translate="label_checkout_and_edit"
-               tal:attributes="href string:${context/absolute_url}/editing_document?_authenticator=${context/@@authenticator/token}">
-              Edit Document
-            </a>
+            <tal:cond tal:condition="context/@@is_officeconnector_checkout_enabled">
+              <a id="checkout_url" class="function-edit" href="#" i18n:translate="label_checkout_and_edit">
+                Edit Document
+              </a>
+            </tal:cond>
+            <tal:cond tal:condition="not: context/@@is_officeconnector_checkout_enabled">
+              <a class="function-edit" href="#" i18n:translate="label_checkout_and_edit"
+                tal:attributes="href string:${context/absolute_url}/editing_document?_authenticator=${context/@@authenticator/token}">
+                Edit Document
+              </a>
+            </tal:cond>
+            <tal:cond tal:condition="context/@@is_officeconnector_attach_enabled">
+              <a id="attach_url" class="function-edit" href="#" i18n:translate="label_attach_to_email">
+                Attach to email
+              </a>
+            </tal:cond>
           </tal:cond>
           <tal:cond tal:condition="not: checkout_and_edit_available">
             <span class="function-edit-inactive discreet" i18n:translate="label_checkout_and_edit">

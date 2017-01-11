@@ -94,4 +94,41 @@
           permission="cmf.ModifyPortalContent"
           />
 
+    <plone:service
+          method="GET"
+          accept="application/json"
+          for="opengever.document.document.IDocumentSchema"
+          factory=".service.Download"
+          name="download"
+          permission="zope2.View"
+          />
+
+    <plone:service
+          method="GET"
+          accept="application/json"
+          for="opengever.document.document.IDocumentSchema"
+          factory=".service.Attach"
+          name="attach"
+          permission="zope2.View"
+          />
+
+    <plone:service
+          method="GET"
+          accept="application/json"
+          for="opengever.document.document.IDocumentSchema"
+          factory=".service.Checkout"
+          name="checkout"
+          permission="cmf.ModifyPortalContent"
+          />
+
+    <plone:service
+          method="PUT"
+          accept="application/json"
+          for="opengever.document.document.IDocumentSchema"
+          factory=".service.Checkout"
+          name="checkin"
+          permission="cmf.ModifyPortalContent"
+          />
+
+
 </configure>

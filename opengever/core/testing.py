@@ -10,7 +10,7 @@ from opengever.activity.interfaces import IActivitySettings
 from opengever.base import model
 from opengever.base.model import create_session
 from opengever.bumblebee.interfaces import IGeverBumblebeeSettings
-from opengever.dossier.dossiertemplate.interfaces import IDossierTemplateSettings
+from opengever.dossier.dossiertemplate.interfaces import IDossierTemplateSettings # noqa
 from opengever.meeting.interfaces import IMeetingSettings
 from opengever.officeatwork.interfaces import IOfficeatworkSettings
 from opengever.ogds.base.setup import create_sql_tables
@@ -241,6 +241,7 @@ class OpengeverFixture(PloneSandboxLayer):
         applyProfile(portal, 'opengever.activity:default')
         applyProfile(portal, 'opengever.bumblebee:default')
         applyProfile(portal, 'opengever.officeatwork:default')
+        applyProfile(portal, 'opengever.officeconnector:default')
         applyProfile(portal, 'opengever.private:default')
         applyProfile(portal, 'ftw.datepicker:default')
         applyProfile(portal, 'plone.formwidget.autocomplete:default')
@@ -248,6 +249,7 @@ class OpengeverFixture(PloneSandboxLayer):
         applyProfile(portal, 'ftw.contentmenu:default')
         applyProfile(portal, 'ftw.zipexport:default')
         applyProfile(portal, 'opengever.disposition:default')
+        applyProfile(portal, 'plone.restapi:default')
 
         applyProfile(portal, 'opengever.testing:testing')
 
@@ -284,8 +286,7 @@ class APILayer(Layer):
     """
 
     def setUp(self):
-        with ploneSite() as site:
-            applyProfile(site, 'plone.restapi:default')
+        pass
 
 
 RESTAPI_LAYER = APILayer()
@@ -389,6 +390,7 @@ class FilingLayer(PloneSandboxLayer):
 
     def tearDownPloneSite(self, portal):
         inactivate_filing_number(portal)
+
 
 OPENGEVER_FUNCTIONAL_FILING_LAYER = FilingLayer()
 

@@ -1,0 +1,34 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    i18n_domain="opengever.officeconnector">
+
+  <browser:page
+      for="*"
+      name="is_officeconnector_attach_enabled"
+      class=".feature_enabled.OfficeconnectorAttachEnabledView"
+      permission="zope2.View"
+    />
+
+  <browser:page
+      for="*"
+      name="is_officeconnector_checkout_enabled"
+      class=".feature_enabled.OfficeconnectorCheckoutEnabledView"
+      permission="zope2.View"
+    />
+
+    <browser:page
+        for="*"
+        name="officeconnector_attach_url"
+        class=".officeconnector_url.OfficeconnectorAttachURLView"
+        permission="zope2.View"
+    />
+
+  <browser:page
+      for="*"
+      name="officeconnector_checkout_url"
+      class=".officeconnector_url.OfficeconnectorCheckoutURLView"
+      permission="zope2.View"
+  />
+
+</configure>
