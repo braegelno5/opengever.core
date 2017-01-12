@@ -36,7 +36,13 @@ class ProposalListingTab(BaseListingTab):
     def columns(self):
         return (
             {'column': 'proposal_id',
-             'column_title': _(u'label_proposal_id', default=u'Reference Number')},
+             'column_title': _(u'label_proposal_id',
+                               default=u'Reference Number')},
+
+            {'column': 'decision_number',
+             'column_title': _(u'label_decision_number',
+                               default=u'Decision Number'),
+             'transform': lambda item, value: item.get_decision_number()},
 
             {'column': 'title',
              'column_title': _(u'column_title', default=u'Title'),
@@ -53,7 +59,6 @@ class ProposalListingTab(BaseListingTab):
             {'column': 'generated_meeting_link',
              'column_title': _(u'column_meeting', default=u'Meeting'),
              'transform': lambda item, value: item.get_meeting_link()},
-
         )
 
 
