@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2016-12-07 10:03+0000\n"
+"POT-Creation-Date: 2017-01-12 11:14+0000\n"
 "PO-Revision-Date: 2016-08-10 05:19+0000\n"
 "Last-Translator: Philippe Gross <gross.philippe@gmail.com>\n"
 "Language-Team: French <https://translations.onegovgever.ch/projects/onegov-gever/opengever-meeting/fr/>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Language: fr\n"
 "X-Generator: Weblate 2.7-dev\n"
 
-#: ./opengever/meeting/command.py:365
+#: ./opengever/meeting/command.py:364
 msgid "A new submitted version of document ${title} has been created"
 msgstr "Une nouvelle version soumis du document ${title} a été créeé"
 
@@ -59,7 +59,7 @@ msgstr ""
 msgid "Add period"
 msgstr ""
 
-#: ./opengever/meeting/command.py:399
+#: ./opengever/meeting/command.py:398
 msgid "Additional document ${title} has been submitted successfully"
 msgstr "Le document supplémentaire ${title} a été soumis avec succès"
 
@@ -124,7 +124,7 @@ msgstr ""
 msgid "Discard"
 msgstr ""
 
-#: ./opengever/meeting/command.py:328
+#: ./opengever/meeting/command.py:327
 msgid "Document ${title} has already been submitted in that version"
 msgstr "Le document ${title} a déjà été soumis dans cette version."
 
@@ -353,13 +353,14 @@ msgstr "Le document a été écrasé par une version plus récente du dossier pr
 msgid "Updated with a newer excerpt version."
 msgstr ""
 
-#: ./opengever/meeting/command.py:260
+#: ./opengever/meeting/command.py:259
 msgid "Updated with a newer generated version from meeting ${title}."
 msgstr "Actualisé avec une nouvelle version de la séance ${title}."
 
 #. Default: "Active"
 #: ./opengever/meeting/model/committee.py:30
 #: ./opengever/meeting/model/period.py:21
+#: ./opengever/meeting/tabs/submittedproposallisting.py:53
 msgid "active"
 msgstr ""
 
@@ -411,6 +412,10 @@ msgstr ""
 #. Default: "Agenda Item updated."
 #: ./opengever/meeting/browser/meetings/agendaitem.py:196
 msgid "agenda_item_updated"
+msgstr ""
+
+#: ./opengever/meeting/tabs/submittedproposallisting.py:50
+msgid "all"
 msgstr ""
 
 #. Default: "Cancel"
@@ -556,6 +561,7 @@ msgstr ""
 #. Default: "Decided"
 #: ./opengever/meeting/model/agendaitem.py:31
 #: ./opengever/meeting/model/proposal.py:145
+#: ./opengever/meeting/tabs/submittedproposallisting.py:55
 msgid "decided"
 msgstr "Décidé"
 

@@ -24,7 +24,7 @@ class SubmittedProposals(SubmittedProposalListingTab):
     grok.name('tabbedview_view-submittedproposals')
     grok.context(ICommittee)
 
-    selection = ViewPageTemplateFile("templates/no_selection.pt")
+    show_selects = False
 
     enabled_actions = []
     major_actions = []
