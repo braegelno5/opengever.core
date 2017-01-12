@@ -5,8 +5,10 @@ from ftw.table import helper
 from opengever.bumblebee import get_preferred_listing_view
 from opengever.bumblebee import is_bumblebee_feature_enabled
 from opengever.bumblebee import set_preferred_listing_view
+from opengever.document.behaviors.metadata import IDocumentMetadata
 from opengever.dossier.base import DOSSIER_STATES_CLOSED
 from opengever.dossier.base import DOSSIER_STATES_OPEN
+from opengever.dossier.behaviors.dossier import IDossier
 from opengever.dossier.interfaces import IDossierMarker
 from opengever.globalindex.model.task import Task
 from opengever.meeting.model.proposal import Proposal
@@ -43,6 +45,22 @@ def translate_public_trial_options(item, value):
     portal = getSite()
     request = getRequest()
     return portal.translate(value, context=request, domain="opengever.base")
+
+
+def document_keywords(item, value):
+    return behaviour_keywords(item, IDocumentMetadata)
+
+
+def dossier_keywords(item, value):
+    return behaviour_keywords(item, IDossier)
+
+
+def behaviour_keywords(item, behaviour_interface):
+    try:
+        keywords = behaviour_interface(item.getObject()).keywords
+        return u' '.join(keywords)
+    except:
+        return u''
 
 
 class BaseTabProxy(BaseCatalogListingTab):
@@ -142,6 +160,11 @@ class Documents(BaseCatalogListingTab):
          'sort_index': 'sortable_title',
          'transform': linked_document},
 
+        {'column': 'keywords',
+         'column_title': _(u'label_keywords', default=u'Keywords'),
+         'transform': document_keywords,
+         'sortable': False},
+
         {'column': 'document_author',
          'column_title': _('label_document_author', default="Document Author"),
          'sort_index': 'sortable_author',
@@ -227,6 +250,11 @@ class Dossiers(BaseCatalogListingTab):
          'column_title': _(u'label_title', default=u'Title'),
          'sort_index': 'sortable_title',
          'transform': linked},
+
+        {'column': 'keywords',
+         'column_title': _(u'label_keywords', default=u'Keywords'),
+         'transform': dossier_keywords,
+         'sortable': False},
 
         {'column': 'review_state',
          'column_title': _(u'label_review_state', default=u'Review state'),
