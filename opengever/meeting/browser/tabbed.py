@@ -15,6 +15,9 @@ class CommitteeTabbedView(ModelProxyTabbedView):
             'id': 'submittedproposals',
             'title': _(u'submittedproposals', default=u'Submitted Proposals'),
             }, {
+            'id': 'tasks',
+            'title': _(u'tasks', default=u'Tasks'),
+            }, {
             'id': 'memberships',
             'title': _(u'memberships', default=u'Memberships'),
             }, {

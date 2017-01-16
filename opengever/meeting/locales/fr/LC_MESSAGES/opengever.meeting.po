@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2017-01-12 11:14+0000\n"
+"POT-Creation-Date: 2017-01-16 14:29+0000\n"
 "PO-Revision-Date: 2016-08-10 05:19+0000\n"
 "Last-Translator: Philippe Gross <gross.philippe@gmail.com>\n"
 "Language-Team: French <https://translations.onegovgever.ch/projects/onegov-gever/opengever-meeting/fr/>\n"
@@ -360,7 +360,7 @@ msgstr "Actualisé avec une nouvelle version de la séance ${title}."
 #. Default: "Active"
 #: ./opengever/meeting/model/committee.py:30
 #: ./opengever/meeting/model/period.py:21
-#: ./opengever/meeting/tabs/submittedproposallisting.py:53
+#: ./opengever/meeting/tabs/submittedproposallisting.py:52
 msgid "active"
 msgstr ""
 
@@ -414,7 +414,7 @@ msgstr ""
 msgid "agenda_item_updated"
 msgstr ""
 
-#: ./opengever/meeting/tabs/submittedproposallisting.py:50
+#: ./opengever/meeting/tabs/submittedproposallisting.py:49
 msgid "all"
 msgstr ""
 
@@ -470,7 +470,7 @@ msgid "closed"
 msgstr "Fermé"
 
 #. Default: "Comittee"
-#: ./opengever/meeting/tabs/proposallisting.py:50
+#: ./opengever/meeting/tabs/proposallisting.py:56
 msgid "column_comittee"
 msgstr "Commission"
 
@@ -515,7 +515,7 @@ msgid "column_location"
 msgstr "Site"
 
 #. Default: "Meeting"
-#: ./opengever/meeting/tabs/proposallisting.py:54
+#: ./opengever/meeting/tabs/proposallisting.py:60
 msgid "column_meeting"
 msgstr "Séance"
 
@@ -531,14 +531,14 @@ msgstr "Rôle"
 
 #. Default: "State"
 #: ./opengever/meeting/tabs/meetinglisting.py:50
-#: ./opengever/meeting/tabs/proposallisting.py:46
+#: ./opengever/meeting/tabs/proposallisting.py:52
 msgid "column_state"
 msgstr "Etat"
 
 #. Default: "Title"
 #: ./opengever/meeting/tabs/committeelisting.py:24
 #: ./opengever/meeting/tabs/meetinglisting.py:46
-#: ./opengever/meeting/tabs/proposallisting.py:42
+#: ./opengever/meeting/tabs/proposallisting.py:48
 msgid "column_title"
 msgstr "Titre"
 
@@ -561,7 +561,7 @@ msgstr ""
 #. Default: "Decided"
 #: ./opengever/meeting/model/agendaitem.py:31
 #: ./opengever/meeting/model/proposal.py:145
-#: ./opengever/meeting/tabs/submittedproposallisting.py:55
+#: ./opengever/meeting/tabs/submittedproposallisting.py:54
 msgid "decided"
 msgstr "Décidé"
 
@@ -758,6 +758,7 @@ msgstr ""
 
 #. Default: "Decision number"
 #: ./opengever/meeting/proposal.py:233
+#: ./opengever/meeting/tabs/proposallisting.py:43
 msgid "label_decision_number"
 msgstr ""
 
@@ -1112,7 +1113,7 @@ msgid "meetings"
 msgstr "Séances"
 
 #. Default: "Memberships"
-#: ./opengever/meeting/browser/tabbed.py:19
+#: ./opengever/meeting/browser/tabbed.py:22
 msgid "memberships"
 msgstr "Affiliations"
 
@@ -1223,7 +1224,7 @@ msgid "pending"
 msgstr "En modification"
 
 #. Default: "Periods"
-#: ./opengever/meeting/browser/tabbed.py:22
+#: ./opengever/meeting/browser/tabbed.py:25
 msgid "periods"
 msgstr ""
 
@@ -1364,6 +1365,11 @@ msgstr "Propositions"
 #: ./opengever/meeting/browser/templates/no_selection.pt:2
 msgid "tab_matches"
 msgstr "${amount} résultats"
+
+#. Default: "Tasks"
+#: ./opengever/meeting/browser/tabbed.py:19
+msgid "tasks"
+msgstr ""
 
 #. Default: "Text successfully added."
 #: ./opengever/meeting/browser/meetings/agendaitem.py:296
