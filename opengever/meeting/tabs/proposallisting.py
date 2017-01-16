@@ -23,6 +23,23 @@ def translated_state(item, value):
     )
 
 
+def decision_number(item, value):
+    agenda_item = item.agenda_item
+    if not agenda_item:
+        return u''
+
+    decision_number = agenda_item.decision_number
+    if not decision_number:
+        return u''
+
+    meeting = agenda_item.meeting
+    if not meeting:
+        return u''
+
+    year = meeting.start.year
+    return u'{}/{}'.format(year, decision_number)
+
+
 class IProposalTableSourceConfig(ITableSourceConfig):
     """Marker interface for proposal table source configs."""
 
@@ -42,7 +59,7 @@ class ProposalListingTab(BaseListingTab):
             {'column': 'decision_number',
              'column_title': _(u'label_decision_number',
                                default=u'Decision Number'),
-             'transform': lambda item, value: item.get_decision_number()},
+             'transform': decision_number},
 
             {'column': 'title',
              'column_title': _(u'column_title', default=u'Title'),
