@@ -37,7 +37,7 @@ def decision_number(item, value):
         return u''
 
     year = meeting.start.year
-    return u'{}/{}'.format(year, decision_number)
+    return u'{} / {}'.format(year, decision_number)
 
 
 class IProposalTableSourceConfig(ITableSourceConfig):
