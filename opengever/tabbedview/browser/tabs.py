@@ -14,6 +14,7 @@ from opengever.globalindex.model.task import Task
 from opengever.meeting.model.proposal import Proposal
 from opengever.meeting.tabs.proposallisting import ProposalListingTab
 from opengever.ogds.base.utils import get_current_admin_unit
+from opengever.repository.interfaces import IRepositoryFolder
 from opengever.tabbedview import _
 from opengever.tabbedview import BaseCatalogListingTab
 from opengever.tabbedview.browser.tasklisting import GlobalTaskListingTab
@@ -345,6 +346,12 @@ class Tasks(GlobalTaskListingTab):
 
     def get_base_query(self):
         return Task.query.by_container(self.context, get_current_admin_unit())
+
+
+class RepoFolderTasks(Tasks):
+
+    grok.name('tabbedview_view-tasks')
+    grok.context(IRepositoryFolder)
 
 
 class ActiveProposalFilter(Filter):
