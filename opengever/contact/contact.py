@@ -1,6 +1,7 @@
 from collective import dexteritytextindexer
 from five import grok
 from opengever.contact import _
+from opengever.dossier.behaviors.participation import IParticipationAware
 from opengever.ogds.models import EMAIL_LENGTH
 from opengever.ogds.models import FIRSTNAME_LENGTH
 from opengever.ogds.models import LASTNAME_LENGTH
@@ -9,6 +10,7 @@ from plone.directives import dexterity
 from plone.directives import form
 from plone.indexer import indexer
 from plone.namedfile.field import NamedImage
+from Products.CMFCore.utils import getToolByName
 from zope import schema
 
 
@@ -229,3 +231,16 @@ class View(dexterity.DisplayForm):
     grok.context(IContact)
     grok.require('zope2.View')
     grok.name('contact_view')
+
+    def dossiers(self):
+        catalog = getToolByName(self.context, 'portal_catalog')
+        contact_id = 'contact:{}'.format(self.context.getId())
+        for brain in catalog(object_provides=['opengever.dossier.behaviors.dossier.IDossierMarker']):
+            obj = brain.getObject()
+            participations = IParticipationAware(obj, None)
+            if participations is None:
+                continue
+
+            for part in participations.get_participations():
+                if contact_id == part.contact:
+                    yield obj

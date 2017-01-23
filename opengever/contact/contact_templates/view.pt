@@ -18,10 +18,28 @@
 
         <div tal:replace="structure provider:plone.abovecontentbody" />
 
+
+        <table class="listing" style="float: right;">
+            <thead>
+                <tr>
+                    <th>Dossiers</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr tal:repeat="dossier view/dossiers">
+                    <td>
+                        <a class="rollover-breadcrumb contenttype-opengever-dossier-businesscasedossier"
+                           tal:attributes="href dossier/absolute_url"
+                           tal:content="dossier/title" />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
         <table class="vertical invisible ">
           <tal:groups repeat="fieldsets python:view.groups">
             <tal:block repeat="widget fieldsets/widgets/values">
-              <tal:cond condition="widget/value">                
+              <tal:cond condition="widget/value">
                 <tr>
                   <tal:widget condition="python: widget.name not in ['form.widgets.email', 'form.widgets.email2', 'form.widgets.url']">
                       <th tal:content="widget/label" ></th>
@@ -30,7 +48,7 @@
                   <tal:widget condition="python: widget.name in ['form.widgets.email', 'form.widgets.email2']">
                       <th tal:content="widget/label" ></th>
                       <td>
-                          <a tal:attributes="href string: mailto:${widget/value}" tal:content="structure widget/render" /> 
+                          <a tal:attributes="href string: mailto:${widget/value}" tal:content="structure widget/render" />
                       </td>
                   </tal:widget>
                   <tal:widget condition="python: widget.name == 'form.widgets.url'">
@@ -50,4 +68,3 @@
 
   </body>
 </html>
-
