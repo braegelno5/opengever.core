@@ -23,6 +23,7 @@ class IContact(form.Schema):
             u'academic_title',
             u'firstname',
             u'lastname',
+            u'peid',
             u'description',
             u'picture',
             u'company',
@@ -83,6 +84,13 @@ class IContact(form.Schema):
         required = True,
         max_length=FIRSTNAME_LENGTH,
         )
+
+    dexteritytextindexer.searchable('peid')
+    peid = schema.TextLine(
+        title=u'PEID',
+        description=u'Personenidentifikationsnummer (PEID)',
+        required=False,
+    )
 
     company = schema.TextLine(
         title = _(u'label_company', default=u"Company"),
