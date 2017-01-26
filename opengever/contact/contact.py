@@ -25,7 +25,7 @@ class IContact(form.Schema):
             u'academic_title',
             u'firstname',
             u'lastname',
-            u'peid',
+            u'email',
             u'description',
             u'picture',
             u'company',
@@ -37,7 +37,6 @@ class IContact(form.Schema):
         u'internet',
         label = _(u'internet', default=u'Internet'),
         fields= [
-            u'email',
             u'email2',
             u'url',
         ])
@@ -87,13 +86,6 @@ class IContact(form.Schema):
         max_length=FIRSTNAME_LENGTH,
         )
 
-    dexteritytextindexer.searchable('peid')
-    peid = schema.TextLine(
-        title=u'PEID',
-        description=u'Personenidentifikationsnummer (PEID)',
-        required=False,
-    )
-
     company = schema.TextLine(
         title = _(u'label_company', default=u"Company"),
         required = False,
@@ -109,12 +101,14 @@ class IContact(form.Schema):
         required = False,
         )
 
+    dexteritytextindexer.searchable('email')
     email = schema.TextLine(
         title = _(u'label_email', default=u'email'),
         required = False,
         max_length=EMAIL_LENGTH,
         )
 
+    dexteritytextindexer.searchable('email2')
     email2 = schema.TextLine(
         title = _(u'label_email2', default=u'Email 2'),
         required = False,

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "POT-Creation-Date: 2016-12-13 16:53+0000\n"
-"PO-Revision-Date: 2011-01-05 15:15+0100\n"
+"PO-Revision-Date: 2017-01-26 17:02+0100\n"
 "Last-Translator: Jonas Baumann <j.baumann@4teamwork.ch>\n"
 "Language-Team: 4teamwork <info@4teamwork.ch>\n"
 "MIME-Version: 1.0\n"
@@ -266,12 +266,12 @@ msgstr "Beteiligung von ${title} bearbeiten"
 #: ./opengever/contact/contact.py:103
 #: ./opengever/contact/contactfolder.py:108
 msgid "label_email"
-msgstr "E-Mail 1"
+msgstr "PEID"
 
 #. Default: "Email 2"
 #: ./opengever/contact/contact.py:109
 msgid "label_email2"
-msgstr "E-Mail 2"
+msgstr "E-Mail"
 
 #. Default: "Fax"
 #: ./opengever/contact/ogdsuser.py:217
