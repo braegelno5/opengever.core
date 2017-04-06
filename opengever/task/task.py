@@ -211,6 +211,8 @@ provideAdapter(NoCheckedoutDocsValidator)
 class Task(Container):
     implements(ITask, ITabbedviewUploadable)
 
+    _ordering = 'unordered'
+
     def __init__(self, *args, **kwargs):
         super(Task, self).__init__(*args, **kwargs)
 
