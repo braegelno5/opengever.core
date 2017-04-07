@@ -5,6 +5,7 @@ Changelog
 2017.1.2 (unreleased)
 ---------------------
 
+- Word meeting: replace proposal textfields with a document. [jone]
 - Make OC multiattach behave more gracefully for long URLs:
 
   - Relax length limit from 500 to 2000 bytes for browsers other than IE11
