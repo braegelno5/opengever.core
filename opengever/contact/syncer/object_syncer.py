@@ -2,16 +2,21 @@ from AccessControl.SecurityInfo import ClassSecurityInformation
 from ftw.upgrade import ProgressLogger
 from opengever.base.model import create_session
 from opengever.contact.models import Address
-from opengever.contact.models import Contact
 from opengever.contact.models import MailAddress
 from opengever.contact.models import Organization
 from opengever.contact.models import OrgRole
 from opengever.contact.models import Person
 from opengever.contact.models import PhoneNumber
 from opengever.contact.models import URL
+from Products.CMFPlone.utils import safe_unicode
+from sqlalchemy.orm import aliased
+from sqlalchemy.sql import select
+from sqlalchemy.sql.expression import column
+from sqlalchemy.sql.expression import join
+from sqlalchemy.sql.expression import table
 from urlparse import urlparse
+from zope.sqlalchemy.datamanager import mark_changed
 import logging
-import transaction
 
 
 logger = logging.getLogger('opengever.contact')
@@ -44,321 +49,315 @@ class ObjectSyncerProgressLogger(ProgressLogger):
 
 
 class ObjectSyncer(object):
-    """Use the Objectsyncer to sync an sql-table with data form separate DB.
-    """
 
-    keys = []  # values updated by the syncer
-
-    type_name = ""
-
-    total_items = 0
-
-    internal_object = None
-    remote_object = None
+    # to define by subclass
+    mapper = None
+    fixed_values = {}
+    attributes = {}
+    unique_key = None
+    primary_key = None
 
     def __init__(self, source_session, query):
-        """data: an iterable with all queried objects (ResultProxy, list of dicts)
+        """
         """
         self.db_session = create_session()
         self.source_session = source_session
-        self.stats = {'updated': 0, 'no_change': 0, 'added': 0, 'total': 0}
 
         self.query = query
 
     def __call__(self):
-        """Starts the sync-process
-        """
-        logger.info("Syncing {}...".format(self.type_name))
-        self.reset_statistic()
+        logger.info('Start migrating {}'.format(self.mapper.__tablename__))
 
-        self.initalize_existing_mapping()
-        self.initalize_contact_id_mapping()
-
+        existing = self.get_existing_mapping()
         result = self.source_session.execute(self.query)
+        to_insert, to_update = self.preparing_values(result, existing)
+
+        self.db_session.bulk_insert_mappings(
+            self.mapper, to_insert, return_defaults=True)
+        logger.info('{} new {} added'.format(
+            len(to_insert), self.mapper.__tablename__))
+
+        self.db_session.bulk_update_mappings(self.mapper, to_update)
+        logger.info('{} {} updated'.format(
+            len(to_insert), self.mapper.__tablename__))
+
+        if to_insert or to_update:
+            mark_changed(self.db_session)
+
+    def get_identifier(self, row):
+        return getattr(row, self.unique_key)
+
+    def preparing_values(self, result, existing):
+        to_insert = []
+        to_update = []
+
         iterable = ObjectSyncerProgressLogger(
-            "Syncing {}".format(self.type_name), result)
+            "Preparing values {}".format(self.mapper.__tablename__), result)
 
         for row in iterable:
-            self.stats['total'] += 1
+            data = self.fixed_values.copy()
+            for key, source_key in self.attributes.items():
+                if callable(source_key):
+                    value = source_key(row)
+                else:
+                    value = getattr(row, source_key)
 
-            internal_object = self.get_internal_obj(row)
-            remote_object = self.get_remote_object(row)
+                if isinstance(value, str):
+                    value = safe_unicode(value)
 
-            if not remote_object:
-                continue
+                data[key] = value
 
-            if internal_object:
-                self.update_object(remote_object, internal_object)
+            if self.is_existing(row, existing):
+                to_update.append(
+                    self.finalize_update_data(data, row, existing))
             else:
-                self.add_object(remote_object)
+                to_insert.append(self.finalize_insert_data(data, row))
 
-        logger.info("Syncing of {} succeeded".format(self.type_name))
-        self.log_statistic()
+        return to_insert, to_update
 
-        transaction.commit()
+    def finalize_update_data(self, data, row, existing):
+        data[self.primary_key] = existing[self.get_identifier(row)]
+        return data
 
-    def initalize_existing_mapping(self):
-        self.existing_mapping = {}
+    def finalize_insert_data(self, data, row):
+        return data
 
-    def initalize_contact_id_mapping(self):
-        self.contact_id_mapping = {}
-        for contact in Contact.query:
-            former_id = contact.former_contact_id
-            self.contact_id_mapping[former_id] = contact.contact_id
-
-    def get_internal_obj(self, row):
-        """Returns the related existing objects depending on
-        the current row.
-        """
-        raise NotImplementedError()
-
-    def get_remote_object(self, row):
-        """Creates and returns a new object (without adding it
-        to the db) instance with the given attributes in the row.
-        """
-        raise NotImplementedError()
-
-    def add_object(self, obj):
-        """Adds an object to the db
-        """
-        self.db_session.add(obj)
-        self.stats['added'] += 1
-
-    def update_object(self, source_obj, target_obj):
-        """Updates the target_obj with the data of the
-        source_obj.
-        """
-        updated = False
-        for key in self.keys:
-            if getattr(source_obj, key) == getattr(target_obj, key):
-                continue
-
-            setattr(target_obj, key, getattr(source_obj, key))
-            updated = True
-
-        if updated:
-            self.stats['updated'] += 1
-        else:
-            self.stats['no_change'] += 1
-
-        return updated
-
-    def reset_statistic(self):
-        self.stats = {'updated': 0, 'no_change': 0, 'added': 0, 'total': 0}
-
-    def log_statistic(self):
-        skipped = (self.stats.get('total') - self.stats.get('added')
-                   - self.stats.get('updated') - self.stats.get('no_change'))
-
-        logger.info("STATISTICS")
-        logger.info("Total: {}".format(self.stats.get('total')))
-        logger.info("Added: {}".format(self.stats.get('added')))
-        logger.info("Updated: {}".format(self.stats.get('updated')))
-        logger.info(
-            "Updated - no change: {}".format(self.stats.get('no_change')))
-        logger.info("Skipped: {}".format(skipped))
-
-    def to_unicode(self, value):
-        if value and not isinstance(value, unicode):
-            return value.decode('utf-8')
-
-        return value
+    def is_existing(self, row, existing):
+        return self.get_identifier(row) in existing
 
 
 class OrganizationSyncer(ObjectSyncer):
 
-    type_name = "Organizations"
+    mapper = Organization
+    fixed_values = {'contact_type': 'organization'}
+    attributes = {'name': 'name',
+                  'former_contact_id': 'former_contact_id',
+                  'is_active': lambda row: bool(getattr(row, 'is_active'))}
 
-    keys = ['name', 'is_active']
+    unique_key = 'former_contact_id'
+    primary_key = 'contact_id'
 
-    def initalize_existing_mapping(self):
-        self.existing_mapping = {}
-        for organization in Organization.query:
-            self.existing_mapping[organization.former_contact_id] = organization
-
-    def get_internal_obj(self, row):
-        return self.existing_mapping.get(row.former_contact_id)
-
-    def get_remote_object(self, row):
-        return Organization(
-            name=self.to_unicode(row.name),
-            former_contact_id=row.former_contact_id,
-            is_active=row.is_active)
+    def get_existing_mapping(self):
+        contact_table = table(
+            "contacts",
+            column('id'),
+            column('former_contact_id'))
+        stmt = select([contact_table.c.former_contact_id, contact_table.c.id])
+        return {key: value for (key, value) in self.db_session.execute(stmt)}
 
 
 class PersonSyncer(ObjectSyncer):
 
-    type_name = "Persons"
+    mapper = Person
+    fixed_values = {'contact_type': 'person'}
+    attributes = {'salutation': 'salutation',
+                  'academic_title': 'title',
+                  'firstname': 'firstname',
+                  'lastname': 'lastname',
+                  'former_contact_id': 'former_contact_id',
+                  'is_active': lambda row: bool(getattr(row, 'is_active'))}
 
-    keys = ['salutation', 'academic_title',
-            'firstname', 'lastname', 'is_active']
+    unique_key = 'former_contact_id'
+    primary_key = 'contact_id'
 
-    def initalize_existing_mapping(self):
-        self.existing_mapping = {}
-        for person in Person.query:
-            self.existing_mapping[person.former_contact_id] = person
-
-    def get_internal_obj(self, row):
-        return self.existing_mapping.get(row.former_contact_id)
-
-    def get_remote_object(self, row):
-        return Person(salutation=self.to_unicode(row.salutation),
-                      academic_title=self.to_unicode(row.title),
-                      firstname=self.to_unicode(row.firstname),
-                      lastname=self.to_unicode(row.lastname),
-                      former_contact_id=row.former_contact_id,
-                      is_active=row.is_active)
-
-
-class MailSyncer(ObjectSyncer):
-
-    type_name = "Mails"
-
-    keys = ['address', 'label']
-
-    def initalize_existing_mapping(self):
-        self.existing_mapping = {}
-        for mail in MailAddress.query:
-            key = u'{}:{}'.format(mail.label, mail.contact.former_contact_id)
-            self.existing_mapping[key] = mail
-
-    def get_internal_obj(self, row):
-        key = u'{}:{}'.format(self.to_unicode(row.label), row.former_contact_id)
-        return self.existing_mapping.get(key)
-
-    def get_remote_object(self, row):
-        contact = Contact.query.get_by_former_contact_id(row.former_contact_id)
-
-        if not contact:
-            return None
-
-        return MailAddress(
-            contact_id=contact.contact_id,
-            address=self.to_unicode(row.address),
-            label=self.to_unicode(row.label))
+    def get_existing_mapping(self):
+        contact_table = table(
+            "contacts",
+            column('id'),
+            column('former_contact_id'))
+        stmt = select([contact_table.c.former_contact_id, contact_table.c.id])
+        return {key: value for (key, value) in self.db_session.execute(stmt)}
 
 
-class UrlSyncer(ObjectSyncer):
+class ContactAdditionsSyncer(ObjectSyncer):
 
-    type_name = "Urls"
+    _contact_mapping = None
 
-    keys = ['url', 'label']
+    def get_identifier(self, row):
+        return u'{}:{}'.format(safe_unicode(row.label), row.former_contact_id)
 
-    def initalize_existing_mapping(self):
-        self.existing_mapping = {}
-        for url in URL.query:
-            key = u'{}:{}'.format(url.label, url.contact.former_contact_id)
-            self.existing_mapping[key] = url
+    def get_contact_mapping(self):
+        if not self._contact_mapping:
+            contact_table = table(
+                "contacts",
+                column('id'),
+                column('former_contact_id'))
+            stmt = select([contact_table.c.former_contact_id, contact_table.c.id])
+            self._contact_mapping = {key: value for (key, value)
+                                     in self.db_session.execute(stmt)}
 
-    def get_internal_obj(self, row):
-        key = u'{}:{}'.format(self.to_unicode(row.label), row.former_contact_id)
-        return self.existing_mapping.get(key)
+        return self._contact_mapping
 
-    def get_remote_object(self, row):
-        contact = Contact.query.get_by_former_contact_id(row.former_contact_id)
-
-        if not contact:
-            return None
-
-        return URL(contact_id=contact.contact_id,
-                   url=self.save_url(self.to_unicode(row.url)),
-                   label=self.to_unicode(row.label))
-
-    def save_url(self, url):
-        if not urlparse(url).scheme:
-            return u'http://{}'.format(url)
-
-        return url
+    def finalize_insert_data(self, data, row):
+        data['contact_id'] = self.get_contact_mapping()[row.former_contact_id]
+        return data
 
 
-class PhoneNumberSyncer(ObjectSyncer):
+class MailSyncer(ContactAdditionsSyncer):
 
-    type_name = "Phonenumbers"
+    mapper = MailAddress
+    attributes = {'label': 'label', 'address': 'address'}
+    primary_key = 'mailaddress_id'
+    _contact_mapping = None
 
-    keys = ['phone_number', 'label']
+    def get_existing_mapping(self):
+        mail_table = table(
+            "mail_addresses", column('id'), column('label'), column('contact_id'))
 
-    def initalize_existing_mapping(self):
-        self.existing_mapping = {}
-        for phone in PhoneNumber.query:
-            key = u'{}:{}'.format(phone.label, phone.contact.former_contact_id)
-            self.existing_mapping[key] = phone
+        contact_table = table(
+            "contacts",
+            column('id'), column('former_contact_id'))
 
-    def get_internal_obj(self, row):
-        key = u'{}:{}'.format(self.to_unicode(row.label), row.former_contact_id)
-        return self.existing_mapping.get(key)
+        stmt = select([
+            mail_table.c.id, mail_table.c.label,
+            mail_table.c.contact_id, contact_table.c.former_contact_id])
+        stmt = stmt.select_from(
+            join(mail_table, contact_table,
+                 mail_table.c.contact_id == contact_table.c.id))
 
-    def get_remote_object(self, row):
-        contact = Contact.query.get_by_former_contact_id(row.former_contact_id)
-
-        if not contact:
-            return None
-
-        return PhoneNumber(
-            contact_id=contact.contact_id,
-            phone_number=self.to_unicode(row.phone_number),
-            label=self.to_unicode(row.label))
+        return {self.get_identifier(row): row.id
+                for row in self.db_session.execute(stmt)}
 
 
-class AddressSyncer(ObjectSyncer):
+def save_url(url):
+    if not urlparse(url).scheme:
+        return u'http://{}'.format(safe_unicode(url))
 
-    type_name = "Addresses"
-
-    keys = ['label', 'street', 'zip_code', 'city', 'country']
-
-    def initalize_existing_mapping(self):
-        self.existing_mapping = {}
-        for address in Address.query:
-            key = u'{}:{}'.format(address.label, address.contact.former_contact_id)
-            self.existing_mapping[key] = address
-
-    def get_internal_obj(self, row):
-        key = u'{}:{}'.format(self.to_unicode(row.label), row.former_contact_id)
-        return self.existing_mapping.get(key)
-
-    def get_remote_object(self, row):
-        contact = Contact.query.get_by_former_contact_id(row.former_contact_id)
-
-        if not contact:
-            return None
-
-        return Address(
-            contact_id=contact.contact_id,
-            label=self.to_unicode(row.label),
-            street=self.to_unicode(row.street),
-            zip_code=self.to_unicode(row.zip_code),
-            city=self.to_unicode(row.city),
-            country=self.to_unicode(row.country))
+    return url
 
 
-class OrgRoleSyncer(ObjectSyncer):
+class UrlSyncer(ContactAdditionsSyncer):
 
-    type_name = "OrgRoles"
+    mapper = URL
+    attributes = {'label': 'label',
+                  'url': lambda row: save_url(getattr(row, 'url'))}
+    primary_key = 'url_id'
 
-    keys = ['function']
+    def get_existing_mapping(self):
+        url_table = table(
+            "urls", column('id'), column('label'), column('contact_id'))
 
-    def initalize_existing_mapping(self):
-        self.existing_mapping = {}
-        for org_role in OrgRole.query:
-            key = u'{}:{}'.format(
-                org_role.person.former_contact_id,
-                org_role.organization.former_contact_id)
+        contact_table = table(
+            "contacts",
+            column('id'), column('former_contact_id'))
 
-            self.existing_mapping[key] = org_role
+        stmt = select([
+            url_table.c.id, url_table.c.label, url_table.c.contact_id,
+            contact_table.c.former_contact_id])
+        stmt = stmt.select_from(
+            join(url_table, contact_table,
+                 url_table.c.contact_id == contact_table.c.id))
 
-    def get_internal_obj(self, row):
-        key = u'{}:{}'.format(row.person_id, row.organisation_id)
-        return self.existing_mapping.get(key)
+        return {self.get_identifier(row): row.id
+                for row in self.db_session.execute(stmt)}
 
-    def get_remote_object(self, row):
-        person = Contact.query.get_by_former_contact_id(row.person_id)
 
-        organization = Contact.query.get_by_former_contact_id(
-            row.organisation_id)
+class PhoneNumberSyncer(ContactAdditionsSyncer):
 
-        if not person or not organization:
-            return None
+    mapper = PhoneNumber
+    attributes = {'label': 'label',
+                  'phone_number': 'phone_number'}
+    primary_key = 'phone_number_id'
 
-        return OrgRole(
-            person_id=person.contact_id,
-            organization_id=organization.contact_id,
-            function=self.to_unicode(row.function))
+    def get_existing_mapping(self):
+        phone_table = table(
+            "phonenumbers",
+            column('id'),
+            column('label'),
+            column('contact_id'))
+
+        contact_table = table(
+            "contacts",
+            column('id'), column('former_contact_id'))
+
+        stmt = select([
+            phone_table.c.id,
+            phone_table.c.label,
+            phone_table.c.contact_id,
+            contact_table.c.former_contact_id])
+
+        stmt = stmt.select_from(
+            join(phone_table, contact_table,
+                 phone_table.c.contact_id == contact_table.c.id))
+
+        return {self.get_identifier(row): row.id
+                for row in self.db_session.execute(stmt)}
+
+
+class AddressSyncer(ContactAdditionsSyncer):
+
+    mapper = Address
+    attributes = {'label': 'label',
+                  'street': 'street',
+                  'zip_code': 'zip_code',
+                  'city': 'city',
+                  'country': 'country'}
+    primary_key = 'address_id'
+
+    def get_existing_mapping(self):
+        address_table = table(
+            "addresses", column('id'), column('label'), column('contact_id'))
+
+        contact_table = table(
+            "contacts",
+            column('id'), column('former_contact_id'))
+
+        stmt = select([
+            address_table.c.id, address_table.c.label, address_table.c.contact_id,
+            contact_table.c.former_contact_id])
+        stmt = stmt.select_from(
+            join(address_table, contact_table,
+                 address_table.c.contact_id == contact_table.c.id))
+
+        return {self.get_identifier(row): row.id
+                for row in self.db_session.execute(stmt)}
+
+
+class OrgRoleSyncer(ContactAdditionsSyncer):
+
+    mapper = OrgRole
+    attributes = {'function': 'function'}
+    primary_key = 'org_role_id'
+
+    def get_identifier(self, row):
+        return u'{}:{}'.format(row.organization_id, row.person_id)
+
+    def get_existing_mapping(self):
+        org_role_table = table("org_roles",
+                               column('id'),
+                               column('organization_id'),
+                               column('person_id'),
+                               column('function'))
+
+        contact_table = table(
+            "contacts",
+            column('id'),
+            column('former_contact_id'))
+
+        org_contact = aliased(contact_table, alias='org_contact')
+        person_contact = aliased(contact_table, alias='person_contact')
+
+        query = self.db_session.query(org_role_table, org_contact, person_contact)
+        query = query.join(org_contact,
+                           org_role_table.c.organization_id == org_contact.c.id)
+        query = query.join(person_contact,
+                           org_role_table.c.person_id == person_contact.c.id)
+
+        mapping = {}
+
+        for row in query:
+            key = u'{}:{}'.format(row[5], row[7])
+            mapping[key] = row[0]
+
+        return mapping
+
+    def finalize_insert_data(self, data, row):
+        data['organization_id'] = self.get_contact_mapping()[row.organization_id]
+        data['person_id'] = self.get_contact_mapping()[row.person_id]
+        return data
+
+    def finalize_update_data(self, data, row, existing):
+        data = super(OrgRoleSyncer, self).finalize_update_data(data, row, existing)
+        data['organization_id'] = self.get_contact_mapping()[row.organization_id]
+        data['person_id'] = self.get_contact_mapping()[row.person_id]
+        return data
