@@ -18,17 +18,20 @@
         </div>
     </tal:block>
 
-    <fieldset tal:repeat="group view/groups"
-              tal:attributes="id python:''.join((group.prefix, 'groups.', group.__name__)).replace('.', '-')">
-       <legend tal:content="group/label" />
-       <tal:block repeat="widget group/widgets/values">
-        <div class="field" tal:condition="python:widget.__name__ not in view.omitted_fields">
-            <label tal:content="widget/label" />
-            <br />
-            <div tal:content="structure widget/render" />
-        </div>
-      </tal:block>
-    </fieldset>
+
+    <table class="invisible vertical dossier-detail-listing">
+        <tbody>
+        <tal:repeat tal:repeat="group view/groups">
+          <tr><th colspan="2" class="dossier-detail-listing-title" tal:content="group/label" /></tr>
+          <tal:repeat tal:repeat="widget group/widgets/values">
+           <tr tal:condition="python:widget.__name__ not in view.omitted_fields">
+            <th tal:content="widget/label" />
+             <td tal:content="structure widget/render" />
+           </tr>
+          </tal:repeat>
+        </tal:repeat>
+        </tbody>
+    </table>
 
   </metal:content-core>
 </metal:main>
