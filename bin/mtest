@@ -125,7 +125,6 @@ def run_tests(runtime_params):
 
     env = copy(os.environ)
     env['ZSERVER_PORT'] = runtime_params[0]
-    print(env)
 
     test_run = subprocess.Popen(
         arguments,
@@ -133,6 +132,7 @@ def run_tests(runtime_params):
         stderr=subprocess.PIPE,
         env=env,
         start_new_session=True,
+        shell=True,
         )
 
     # The pipe buffer is only 4k in size, so we need to constantly fetch it
