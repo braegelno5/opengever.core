@@ -131,6 +131,7 @@ def run_tests(runtime_params):
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         env=env,
+        shell=True,
         )
 
     # The pipe buffer is only 4k in size, so we need to constantly fetch it
