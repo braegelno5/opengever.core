@@ -125,6 +125,7 @@ def run_tests(runtime_params):
 
     env = copy(os.environ)
     env['ZSERVER_PORT'] = runtime_params[0]
+    print('param: {}'.format(runtime_params[0]), flush=True)
 
     test_run = subprocess.Popen(
         arguments,
