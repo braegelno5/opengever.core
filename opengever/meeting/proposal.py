@@ -262,7 +262,7 @@ class ProposalBaseMixin(object):
 
         attributes.extend([
             {'label': _('label_workflow_state', default=u'State'),
-             'value': self.get_state().title,
+             'value': self.get_state_label(),
              'is_html': True},
 
             {'label': _('label_decision_number', default=u'Decision number'),
@@ -283,6 +283,9 @@ class ProposalBaseMixin(object):
 
     def get_state(self):
         return self.load_model().get_state()
+
+    def get_state_label(self):
+        return self.get_state().title
 
     def get_physical_path(self):
         url_tool = api.portal.get_tool(name="portal_url")
@@ -525,6 +528,11 @@ class Proposal(Container, ProposalBaseMixin):
     def history_records(self):
         return []
     ###########################################################################
+
+    def get_state_label(self):
+        return translate(
+            self.get_state(), domain='plone',
+            context=api.portal.get().REQUEST)
 
     def get_transitions(self):
         """Return the plone transitions available for a proposal.

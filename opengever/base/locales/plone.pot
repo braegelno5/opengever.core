@@ -371,3 +371,12 @@ msgstr ""
 
 msgid "disposition-transition-refuse"
 msgstr ""
+
+msgid "proposal-state-active"
+msgstr ""
+
+msgid "proposal-state-submitted"
+msgstr ""
+
+msgid "proposal-transition-submit"
+msgstr ""

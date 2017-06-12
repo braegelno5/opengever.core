@@ -360,3 +360,11 @@ msgstr "Aktivieren"
 msgid "transition-add-document"
 msgstr "Dokument hinzugefügt"
 
+msgid "proposal-state-active"
+msgstr "In Bearbeitung"
+
+msgid "proposal-state-submitted"
+msgstr "Eingereicht"
+
+msgid "proposal-transition-submit"
+msgstr "Einreichen"
