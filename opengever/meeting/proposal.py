@@ -25,6 +25,7 @@ from opengever.ogds.base.utils import get_current_admin_unit
 from opengever.ogds.base.utils import ogds_service
 from plone import api
 from plone.app.uuid.utils import uuidToObject
+from plone.dexterity.content import Container
 from plone.directives import form
 from plone.uuid.interfaces import IUUID
 from Products.CMFPlone.utils import safe_unicode
@@ -46,7 +47,7 @@ def default_title(context):
     return context.title
 
 
-class IProposalModel(Interface):
+class IProposalModel(form.Schema):
     """Proposal model schema interface."""
 
     title = schema.TextLine(
@@ -153,7 +154,7 @@ class ISubmittedProposalModel(Interface):
         )
 
 
-class IProposal(form.Schema):
+class IProposal(IProposalModel):
     """Proposal Proxy Object Schema Interface"""
 
     relatedItems = RelationList(
@@ -180,7 +181,7 @@ class ISubmittedProposal(IProposal):
     pass
 
 
-class ProposalBase(ModelContainer):
+class ProposalBaseMixin(object):
 
     workflow = None
 
@@ -287,19 +288,6 @@ class ProposalBase(ModelContainer):
         url_tool = api.portal.get_tool(name="portal_url")
         return '/'.join(url_tool.getRelativeContentPath(self))
 
-    def get_searchable_text(self):
-        """Return the searchable text for this proposal.
-
-        This method is called during object-creation, thus the model might not
-        yet be created (e.g. when the object is added to its parent).
-
-        """
-        model = self.load_model()
-        if not model:
-            return ''
-
-        return model.get_searchable_text()
-
     def get_committee_admin_unit(self):
         admin_unit_id = self.load_model().committee.admin_unit_id
         return ogds_service().fetch_admin_unit(admin_unit_id)
@@ -364,7 +352,7 @@ class ProposalBase(ModelContainer):
         return False
 
 
-class SubmittedProposal(ProposalBase):
+class SubmittedProposal(ModelContainer, ProposalBaseMixin):
     """Proxy for a proposal in queue with a committee."""
 
     content_schema = ISubmittedProposal
@@ -374,6 +362,19 @@ class SubmittedProposal(ProposalBase):
     implements(content_schema)
     workflow = ProposalModel.workflow.with_visible_transitions(
         ['submitted-pending'])
+
+    def get_searchable_text(self):
+        """Return the searchable text for this proposal.
+
+        This method is called during object-creation, thus the model might not
+        yet be created (e.g. when the object is added to its parent).
+
+        """
+        model = self.load_model()
+        if not model:
+            return ''
+
+        return model.get_searchable_text()
 
     def is_editable(self):
         """A proposal in a meeting/committee is editable when submitted but not
@@ -498,18 +499,44 @@ class SubmittedProposal(ProposalBase):
             dossier.title)
 
 
-class Proposal(ProposalBase):
-    """Act as proxy for the proposal stored in the database.
+class Proposal(Container, ProposalBaseMixin):
+    """Proposal in a Dossier."""
 
-    """
-    content_schema = IProposal
-    model_schema = IProposalModel
-    model_class = ProposalModel
+    implements(IProposal)
 
-    implements(content_schema)
+    ###########################################################################
+    # temporary stuff
+    def get_meeting_link(self):
+        return ''
 
-    workflow = ProposalModel.workflow.with_visible_transitions(
-        ['pending-submitted', 'pending-cancelled', 'cancelled-pending'])
+    def get_decision(self):
+        return ''
+
+    def get_decision_number(self):
+        return None
+
+    def load_model(self):
+        return self  # XXX: clever us, now we're pretending to be the model
+
+    def get_state(self):
+        return api.content.get_state(self)
+
+    @property
+    def history_records(self):
+        return []
+    ###########################################################################
+
+    def get_transitions(self):
+        """Return the plone transitions available for a proposal.
+
+        Also alias name/id to have same interface as SQL transitions.
+        XXX remove aliasing
+        """
+        wftool = api.portal.get_tool(name='portal_workflow')
+        states = wftool.listActionInfos(object=self)
+        for state in states:
+            state['name'] = state['id']
+        return states
 
     def _after_model_created(self, model_instance):
         session = create_session()
@@ -522,7 +549,8 @@ class Proposal(ProposalBase):
         of editable attributes.
 
         """
-        return self.load_model().is_editable_in_dossier()
+        # eliminate me!
+        return self.get_state() == 'proposal-state-active'
 
     def get_documents(self):
         documents = [relation.to_object for relation in self.relatedItems]
@@ -530,11 +558,12 @@ class Proposal(ProposalBase):
         return documents
 
     def get_excerpt(self):
-        return self.load_model().resolve_excerpt_document()
+        return None
 
     def get_committee(self):
-        committee_model = self.load_model().committee
-        return committee_model.oguid.resolve_object()
+        return None
+        # committee_model = self.load_model().committee
+        # return committee_model.oguid.resolve_object()
 
     def get_containing_dossier(self):
         return get_containing_dossier(self)
@@ -545,52 +574,9 @@ class Proposal(ProposalBase):
         return repository_folder.Title(language=language,
                                        prefix_with_reference_number=False)
 
-    def update_model_create_arguments(self, data, context):
-        aq_wrapped_self = self.__of__(context)
-
-        workflow_state = self.workflow.default_state.name
-        reference_number = IReferenceNumber(
-            context.get_main_dossier()).get_number()
-
-        language = data.get('language')
-        repository_folder_title = aq_wrapped_self.get_repository_folder_title(
-            language)
-
-        data.update(dict(workflow_state=workflow_state,
-                         physical_path=aq_wrapped_self.get_physical_path(),
-                         dossier_reference_number=reference_number,
-                         repository_folder_title=repository_folder_title,
-                         creator=aq_wrapped_self.Creator()))
-        return data
-
-    def update_model(self, data):
-        language = data.get('language')
-        data['repository_folder_title'] = self.get_repository_folder_title(
-            language)
-        return super(Proposal, self).update_model(data)
-
-    def get_edit_values(self, fieldnames):
-        values = super(Proposal, self).get_edit_values(fieldnames)
-        committee = values.pop('committee', None)
-        if committee:
-            committee = str(committee.committee_id)
-            values['committee'] = committee
-        return values
-
-    def sync_model(self, proposal_model=None):
-        proposal_model = proposal_model or self.load_model()
-
-        reference_number = IReferenceNumber(
-            self.get_containing_dossier().get_main_dossier()).get_number()
-        repository_folder_title = self.get_repository_folder_title(
-            proposal_model.language)
-
-        proposal_model.physical_path = self.get_physical_path()
-        proposal_model.dossier_reference_number = reference_number
-        proposal_model.repository_folder_title = repository_folder_title
-
     def is_submit_additional_documents_allowed(self):
-        return self.load_model().is_submit_additional_documents_allowed()
+        return False
+        #return self.load_model().is_submit_additional_documents_allowed()
 
     def submit_additional_document(self, document):
         assert self.is_submit_additional_documents_allowed()

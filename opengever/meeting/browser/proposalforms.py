@@ -49,12 +49,9 @@ class FieldConfigurationMixin(object):
         self.fields[fieldname].widgetFactory = TrixFieldWidget
 
 
-class ProposalEditForm(FieldConfigurationMixin,
-                       ModelProxyEditForm,
-                       dexterity.EditForm):
+class ProposalEditForm(FieldConfigurationMixin, dexterity.EditForm):
+
     grok.context(IProposal)
-    fields = field.Fields(Proposal.model_schema, ignoreContext=True)
-    content_type = Proposal
 
     def updateWidgets(self):
         super(ProposalEditForm, self).updateWidgets()
@@ -118,10 +115,8 @@ class IAddProposal(IProposal):
              'transform': helper.readable_date}))
 
 
-class AddForm(FieldConfigurationMixin, ModelProxyAddForm, dexterity.AddForm):
+class AddForm(FieldConfigurationMixin, dexterity.AddForm):
     grok.name('opengever.meeting.proposal')
-    content_type = Proposal
-    fields = field.Fields(Proposal.model_schema)
 
     def __init__(self, *args, **kwargs):
         super(AddForm, self).__init__(*args, **kwargs)

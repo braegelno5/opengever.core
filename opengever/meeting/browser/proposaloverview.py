@@ -72,6 +72,9 @@ class ProposalOverview(OverviewBase, DisplayForm, GeverTabMixin):
     grok.template('proposaloverview')
     grok.require('zope2.View')
 
+    def transition_url(self, transition):
+        return transition.get('url')
+
     def get_submitted_document(self, document):
         return SubmittedDocument.query.get_by_source(
             self.context, document.getObject())
