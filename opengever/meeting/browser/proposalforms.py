@@ -1,5 +1,7 @@
 from five import grok
 from ftw.table import helper
+from opengever.base.model import create_session
+from opengever.base.oguid import Oguid
 from opengever.base.schema import TableChoice
 from opengever.base.widgets import TrixFieldWidget
 from opengever.dossier.templatefolder import get_template_folder
@@ -9,7 +11,7 @@ from opengever.meeting.form import ModelProxyAddForm
 from opengever.meeting.form import ModelProxyEditForm
 from opengever.meeting.proposal import IProposal
 from opengever.meeting.proposal import ISubmittedProposal
-from opengever.meeting.proposal import Proposal
+from opengever.meeting.model import Proposal
 from opengever.meeting.proposal import SubmittedProposal
 from opengever.tabbedview.helper import document_with_icon
 from plone import api
@@ -147,12 +149,22 @@ class AddForm(FieldConfigurationMixin, dexterity.AddForm):
             self.widgets['language'].mode = HIDDEN_MODE
 
     def createAndAdd(self, data):
+        def create_proposal():
+            proposal = super(AddForm, self).createAndAdd(data)
+            session = create_session()
+            session.add(
+                Proposal(
+                    oguid=Oguid.for_object(proposal, register=True),
+                    physical_path='FAKE!',
+                    creator='FAKE!'))
+            return proposal
+
         if not is_word_meeting_implementation_enabled():
-            return super(AddForm, self).createAndAdd(data)
+            return create_proposal()
 
         proposal_template = data.pop('proposal_template')
         self.instance_schema = IProposal
-        noaq_proposal = super(AddForm, self).createAndAdd(data)
+        noaq_proposal = create_proposal(data)
         proposal = self.context.get(noaq_proposal.getId())
         proposal.create_proposal_document(proposal_template.file)
         return proposal

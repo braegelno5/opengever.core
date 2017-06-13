@@ -1,7 +1,6 @@
 from Acquisition import aq_inner
 from Acquisition import aq_parent
 from opengever.base.command import CreateDocumentCommand
-from opengever.base.interfaces import IReferenceNumber
 from opengever.base.model import create_session
 from opengever.base.oguid import Oguid
 from opengever.base.security import elevated_privileges
@@ -18,6 +17,7 @@ from opengever.meeting.command import RejectProposalCommand
 from opengever.meeting.command import UpdateSubmittedDocumentCommand
 from opengever.meeting.container import ModelContainer
 from opengever.meeting.exceptions import WordMeetingImplementationDisabledError
+from opengever.meeting.model import Committee
 from opengever.meeting.model import proposalhistory
 from opengever.meeting.model import SubmittedDocument
 from opengever.meeting.model.proposal import Proposal as ProposalModel
@@ -57,7 +57,7 @@ class IProposalModel(form.Schema):
         defaultFactory=default_title
         )
 
-    committee = schema.Choice(
+    committee_id = schema.Choice(
         title=_('label_committee', default=u'Committee'),
         source='opengever.meeting.ActiveCommitteeVocabulary',
         required=True)
@@ -528,6 +528,10 @@ class Proposal(Container, ProposalBaseMixin):
     def history_records(self):
         return []
     ###########################################################################
+
+    @property
+    def committee(self):
+        return Committee.query.get(self.committee_id)
 
     def get_state_label(self):
         return translate(

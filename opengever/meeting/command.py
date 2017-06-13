@@ -3,6 +3,7 @@ from opengever.base.model import create_session
 from opengever.base.oguid import Oguid
 from opengever.base.request import dispatch_json_request
 from opengever.base.request import dispatch_request
+from opengever.base.transport import DexterityObjectDataExtractor
 from opengever.base.transport import REQUEST_KEY
 from opengever.base.transport import Transporter
 from opengever.locking.lock import SYS_LOCK
@@ -297,6 +298,16 @@ class UpdateExcerptInDossierCommand(object):
             oguid=self.excerpt.oguid.id)
 
 
+class ProposalAsSubmittedProposalExtractor(DexterityObjectDataExtractor):
+    """Extract a proposal but switch type to a submitted proposal."""
+
+    def _extract_base_data(self):
+        data = super(
+            ProposalAsSubmittedProposalExtractor, self)._extract_base_data()
+        data['portal_type'] = 'opengever.meeting.submittedproposal'
+        return data
+
+
 class CreateSubmittedProposalCommand(object):
 
     def __init__(self, proposal):
@@ -305,23 +316,26 @@ class CreateSubmittedProposalCommand(object):
         self.admin_unit_id = self.proposal.get_committee_admin_unit().id()
 
     def execute(self):
-        model = self.proposal.load_model()
-        jsondata = {'committee_oguid': model.committee.oguid.id,
-                    'proposal_oguid': model.oguid.id}
-
+        additional_data = {}
         if is_word_meeting_implementation_enabled():
             blob = self.proposal.get_proposal_document().file
+            jsondata = {}
             jsondata['file'] = {
                 'filename': blob.filename,
                 'contentType': blob.contentType,
                 'data': base64.encodestring(blob.data)}
+            additional_data['proposal_document'] = json.dumps(jsondata)
 
-        request_data = {REQUEST_KEY: json.dumps(jsondata)}
-        response = dispatch_json_request(
-            self.admin_unit_id, '@@create_submitted_proposal', data=request_data)
+        response = Transporter().transport_to(
+            self.proposal, self.admin_unit_id,
+            self.proposal.committee.physical_path,
+            view='create_submitted_proposal',
+            extractor=ProposalAsSubmittedProposalExtractor,
+            **additional_data)
 
         self.submitted_proposal_path = response['path']
-        create_session().add(Submitted(proposal=model))
+        # XXX
+        # create_session().add(Submitted(proposal=model))
 
 
 class RejectProposalCommand(object):

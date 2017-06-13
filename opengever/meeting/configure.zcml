@@ -50,4 +50,10 @@
       handler=".handlers.configure_committee_container_portlets"
       />
 
+  <subscriber
+      for="opengever.meeting.proposal.IProposal
+           Products.DCWorkflow.interfaces.IAfterTransitionEvent"
+      handler=".handlers.after_proposal_transition"
+      />
+
 </configure>

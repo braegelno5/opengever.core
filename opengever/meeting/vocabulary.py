@@ -17,8 +17,7 @@ class CommitteeVocabulary(grok.GlobalUtility):
         terms = []
 
         for committee in self.get_committees():
-            terms.append(SimpleTerm(value=committee,
-                                    token=committee.committee_id,
+            terms.append(SimpleTerm(value=committee.committee_id,
                                     title=committee.title))
         return SimpleVocabulary(terms)
 

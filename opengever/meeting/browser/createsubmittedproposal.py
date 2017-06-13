@@ -1,36 +1,29 @@
 from five import grok
-from opengever.base.oguid import Oguid
+from opengever.base.model import create_session
 from opengever.base.security import elevated_privileges
-from opengever.base.transport import REQUEST_KEY
+from opengever.base.transport import PrivilegedReceiveObject
 from opengever.meeting import is_word_meeting_implementation_enabled
-from opengever.meeting.proposal import SubmittedProposal
-from opengever.meeting.service import meeting_service
-from Products.CMFPlone.interfaces import IPloneSiteRoot
+from opengever.meeting.committee import ICommittee
+from opengever.meeting.model import Proposal
 import base64
 import json
 
 
-class CreateSubmittedProposal(grok.View):
-    grok.context(IPloneSiteRoot)
+class CreateSubmittedProposal(PrivilegedReceiveObject):
+
+    grok.context(ICommittee)
     grok.name('create_submitted_proposal')
     grok.require('zope2.Public')
 
-    def render(self):
-        jsondata = self.request.get(REQUEST_KEY)
-        data = json.loads(jsondata)
-        committee = Oguid.parse(data['committee_oguid']).resolve_object()
-        proposal_oguid = Oguid.parse(data['proposal_oguid'])
-        proposal = meeting_service().fetch_proposal_by_oguid(proposal_oguid)
+    def receive(self):
+        submitted_proposal = super(CreateSubmittedProposal, self).receive()
 
-        with elevated_privileges():
-            submitted_proposal = SubmittedProposal.create(proposal, committee)
-
-            if is_word_meeting_implementation_enabled():
+        if is_word_meeting_implementation_enabled():
+            with elevated_privileges():
+                data = json.loads(self.request['proposal_document'])
                 submitted_proposal.create_proposal_document(
                     filename=data['file']['filename'],
                     content_type=data['file']['contentType'].encode('utf-8'),
                     data=base64.decodestring(data['file']['data']))
 
-            self.request.response.setHeader("Content-type", "application/json")
-            return json.dumps(
-                {'path': '/'.join(submitted_proposal.getPhysicalPath())})
+        return submitted_proposal

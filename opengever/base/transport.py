@@ -44,11 +44,13 @@ class Transporter(object):
     """
 
     def transport_to(self, obj, target_cid, container_path,
-                     view='transporter-receive-object', **data):
+                     view='transporter-receive-object',
+                     extractor=None,
+                     **data):
         """ Copies an *object* to another client (*target_cid*).
         """
 
-        jsondata = json.dumps(self.extract(obj))
+        jsondata = json.dumps(self.extract(obj, extractor=extractor))
 
         request_data = {
             REQUEST_KEY: jsondata,
@@ -77,8 +79,9 @@ class Transporter(object):
     def receive(self, container, request):
         return self.create(self._extract_data(request), container)
 
-    def extract(self, obj):
-        return DexterityObjectDataExtractor(obj).extract()
+    def extract(self, obj, extractor=None):
+        extractor = extractor or DexterityObjectDataExtractor
+        return extractor(obj).extract()
 
     def create(self, data, container):
         return DexterityObjectCreator(data).create_in(container)
@@ -190,11 +193,15 @@ class DexterityObjectDataExtractor(object):
     def __init__(self, obj):
         self.obj = obj
 
+    def _extract_base_data(self):
+        return {
+            'id': self.obj.getId(),
+            'title': self.obj.Title(),
+            'portal_type': self.obj.portal_type}
+
     def extract(self):
         data = {}
-        data[BASEDATA_KEY] = {'id': self.obj.getId(),
-                              'title': self.obj.Title(),
-                              'portal_type': self.obj.portal_type}
+        data[BASEDATA_KEY] = self._extract_base_data()
 
         # collect data
         collectors = getAdapters((self.obj,), IDataCollector)

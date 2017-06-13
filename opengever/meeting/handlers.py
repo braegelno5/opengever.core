@@ -96,3 +96,13 @@ def configure_committee_container_portlets(container, event):
     """Do not acquire portlets.
     """
     block_context_portlet_inheritance(container)
+
+
+def after_proposal_transition(proposal, event):
+    """Dispatch event to model based on executed transition."""
+
+    if not event.transition:
+        return
+
+    if event.transition.id == 'proposal-transition-submit':
+        proposal.submit()
