@@ -351,7 +351,7 @@ class Proposals(ProposalListingTab):
 
     enabled_actions = []
     major_actions = []
-    sort_on = 'title'
+    sort_on = ''
     show_selects = False
 
     template = ViewPageTemplateFile("generic_with_filters.pt")

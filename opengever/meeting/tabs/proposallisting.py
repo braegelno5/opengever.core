@@ -61,4 +61,5 @@ class ProposalTableSource(SqlTableSource):
     grok.implements(ITableSource)
     grok.adapts(ProposalListingTab, Interface)
 
-    searchable_columns = [Proposal.title, ]
+    # XXX make title searchable
+    searchable_columns = []
