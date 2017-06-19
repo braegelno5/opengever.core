@@ -23,6 +23,12 @@ proposal_table = table(
 )
 
 
+admin_units_table = table(
+    "admin_units",
+    column("unit_id"),
+    column("enabled"))
+
+
 PROPOSAL_FIELDS = (
     'title',
     'legal_basis',
@@ -45,8 +51,18 @@ class MoveProposalFieldsToPloneObjects(SchemaMigration):
         self.migrate_data()
         self.drop_sql_columns()
 
+    def has_multiple_admin_units(self):
+        statement = admin_units_table.select().where(
+            admin_units_table.c.enabled==True)
+        return len(self.execute(statement).fetchall()) > 1
+
     def migrate_data(self):
-        for proposal in self.execute(proposal_table.select()):
+        proposals = self.execute(proposal_table.select()).fetchall()
+        if proposals:
+            msg = 'data migration supports only one admin-unit!'
+            assert not self.has_multiple_admin_units(), msg
+
+        for proposal in proposals:
             self.migrate_proposal_fields_to_plone_objects(proposal)
 
     def migrate_proposal_fields_to_plone_objects(self, sql_proposal):
