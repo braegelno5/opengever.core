@@ -26,6 +26,9 @@ class OpengeverContentFixture(object):
 
         with self.freeze_at_hour(7):
             self.create_users()
+            # The vip_group is a group with no significance in the fixture;
+            # it is simply for convenience.
+            self.create_group('vip_group', (self.administrator,))
 
         with self.freeze_at_hour(8):
             with self.login(self.administrator):
@@ -65,6 +68,8 @@ class OpengeverContentFixture(object):
             'dossier_responsible', u'Robert', u'Ziegler')
         self.regular_user = self.create_user(
             'regular_user', u'K\xe4thi', u'B\xe4rfuss')
+        self.committee_member = self.create_user(
+            'committee_member', u'J\xfcrgen', u'Sch\xe4fer')
 
     @staticuid()
     def create_repository_tree(self):
@@ -110,12 +115,15 @@ class OpengeverContentFixture(object):
             .titled(u'Sitzungen')
             .having(protocol_template=self.sablon_template,
                     excerpt_template=self.sablon_template)))
+        self.committee_container.manage_setLocalRoles(
+            self.org_unit.users_group_id, ('Reader', ))
+        self.committee_container.reindexObjectSecurity()
 
         self.register('committee', self.create_committee(
             title=u'Rechnungspr\xfcfungskommission',
             repository_folder=self.repo1,
             group_id='committee_rpk_group',
-            members=[self.administrator]))
+            members=[self.administrator, self.committee_member]))
 
     @staticuid()
     def create_treaty_dossiers(self):
@@ -194,22 +202,25 @@ class OpengeverContentFixture(object):
         return plone_user
 
     def create_committee(self, title, repository_folder, group_id, members):
-        # XXX I would have expected the commitee builder to do all of that.
-        ogds_members = map(ogds_service().find_user,
-                           map(methodcaller('getId'), members))
-
-        create(Builder('ogds_group')
-               .having(groupid=group_id,
-                       users=ogds_members))
-        create(Builder('group')
-               .with_groupid(group_id)
-               .with_members(*members))
+        self.create_group(group_id, members)
         return create(
             Builder('committee')
             .titled(title)
             .within(self.committee_container)
             .having(repository_folder=repository_folder,
                     group_id=group_id))
+
+    def create_group(self, group_id, members):
+        """Create a group in OGDS and in plone.
+        """
+        ogds_members = map(ogds_service().find_user,
+                           map(methodcaller('getId'), members))
+        create(Builder('ogds_group')
+               .having(groupid=group_id,
+                       users=ogds_members))
+        create(Builder('group')
+               .with_groupid(group_id)
+               .with_members(*members))
 
     @contextmanager
     def login(self, user):

@@ -3,6 +3,9 @@ from opengever.core.testing import OPENGEVER_INTEGRATION_TESTING
 from plone import api
 from plone.app.testing import login
 from unittest2 import TestCase
+from z3c.relationfield import RelationValue
+from zope.component import getUtility
+from zope.intid.interfaces import IIntIds
 
 
 FEATURE_FLAGS = {
@@ -34,6 +37,11 @@ class IntegrationTestCase(TestCase):
         """Activate a feature flag.
         """
         api.portal.set_registry_record(FEATURE_FLAGS[feature], True)
+
+    def make_relation(self, target):
+        intids = getUtility(IIntIds)
+        int_id = intids.getId(target)
+        return RelationValue(int_id)
 
     def __getattr__(self, name):
         """Make it possible to access objects from the content lookup table
