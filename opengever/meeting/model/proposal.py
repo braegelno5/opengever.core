@@ -272,9 +272,12 @@ class Proposal(Base):
         assert self.can_be_scheduled()
 
         self.execute_transition('submitted-scheduled')
-        session = create_session()
         meeting.agenda_items.append(AgendaItem(proposal=self))
-        session.add(proposalhistory.Scheduled(proposal=self, meeting=meeting))
+
+        IHistory(self.resolve_submitted_proposal()).append_record(
+            'scheduled', meeting_id=meeting.meeting_id)
+
+        #session.add(proposalhistory.Scheduled(proposal=self, meeting=meeting))
 
     def reject(self, text):
         assert self.workflow.can_execute_transition(self, 'submitted-pending')

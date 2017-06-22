@@ -1,6 +1,7 @@
 from BTrees.OOBTree import OOBTree
 from opengever.base.date_time import utcnow_tz_aware
 from opengever.meeting import _
+from opengever.meeting.model import Meeting
 from opengever.ogds.base.actor import Actor
 from persistent.mapping import PersistentMapping
 from plone import api
@@ -52,7 +53,14 @@ class ProposalHistory(object):
         record = clazz(self.context, timestamp=timestamp, **kwargs)
         record.append_to(history)
 
+        if record.needs_syncing:
+            pass
+
         return record
+
+    def receive_record(self, timestamp, data):
+        history = self._get_history_for_writing()
+        history[timestamp] = data
 
     def _get_history_for_writing(self):
         return IAnnotations(self.context).setdefault(
@@ -72,6 +80,7 @@ class BaseHistoryRecord(object):
 
     """
     name = None
+    needs_syncing = False
 
     @classmethod
 
@@ -182,3 +191,27 @@ class ProposalRejected(BaseHistoryRecord):
 
 ProposalHistory.register(ProposalRejected)
 
+
+class ProposalScheduled(BaseHistoryRecord):
+
+    name = 'scheduled'
+
+    def __init__(self, context, meeting_id, timestamp=None):
+        super(ProposalScheduled, self).__init__(
+            context, timestamp=timestamp)
+        self.data['meeting_id'] = meeting_id
+
+    @property
+    def meeting_title(self):
+        meeting_id = self.data.get('meeting_id')
+        meeting = Meeting.query.get(meeting_id)
+        meeting_title = meeting.get_title() if meeting else u''
+        return meeting_title
+
+    def message(self):
+        return _(u'proposal_history_label_scheduled',
+                 u'Scheduled for meeting ${meeting} by ${user}',
+                 mapping={'user': self.get_actor_link(),
+                          'meeting': self.meeting_title})
+
+ProposalHistory.register(ProposalScheduled)
