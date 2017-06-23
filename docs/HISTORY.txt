@@ -5,6 +5,7 @@ Changelog
 2017.3.0 (unreleased)
 ---------------------
 
+- Improve warning when opening an old document. [tarnap]
 - Implement and enable redirector etag adapter. [phgross]
 - Add reference column to document listings. [tarnap]
 - Do not display templates without an assigned file in the CreateDocumentFromTemplate form. [tarnap]
