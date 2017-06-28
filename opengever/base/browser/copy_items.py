@@ -3,6 +3,7 @@ from opengever.base import _
 from opengever.base.clipboard import Clipboard
 from plone import api
 from plone.dexterity.interfaces import IDexterityContainer
+from plone.dexterity.interfaces import IDexterityContent
 from plone.z3cform import layout
 
 
@@ -59,3 +60,29 @@ class CopyItemsFormView(layout.FormWrapper, grok.View):
 
     def are_copyable(self, objs):
         return all(obj.cb_isCopyable() for obj in objs)
+
+
+class CopyItemView(grok.View):
+    grok.context(IDexterityContent)
+    grok.name('copy_item')
+    grok.require('zope2.View')
+
+    def __init__(self, context, request):
+        grok.View.__init__(self, context, request)
+
+    def render(self):
+
+        if self.context.cb_isCopyable():
+            Clipboard(self.request).set_objs([self.context])
+            msg = _(u'msg_successfuly_copied',
+                    default=u"Selected objects successfully copied.")
+            msg_type = 'info'
+        else:
+            msg = _(u'error_not_copyable',
+                    default=u"The item you selected cannot be copied.")
+            msg_type = 'error'
+
+        api.portal.show_message(
+            message=msg, request=self.request, type=msg_type)
+
+        return self.request.RESPONSE.redirect(self.context.absolute_url())

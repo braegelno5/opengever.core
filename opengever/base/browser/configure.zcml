@@ -108,4 +108,11 @@
       class=".breadcrumb_by_uid.ResolveUIDToBreadcrumb"
       />
 
+  <browser:page
+      name="copy_item"
+      for="opengever.document.document.IDocumentSchema"
+      class=".copy_items.CopyItemView"
+      permission="zope2.View"
+      />
+
 </configure>

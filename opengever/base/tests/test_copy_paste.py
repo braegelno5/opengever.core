@@ -29,6 +29,36 @@ class TestCopyItems(FunctionalTestCase):
         self.assertEqual(['Selected objects successfully copied.'], info_messages())
 
 
+class TestCopyItem(FunctionalTestCase):
+
+    def setUp(self):
+        super(TestCopyItem, self).setUp()
+
+        self.dossier = create(Builder('dossier'))
+        self.document = create(Builder('document')
+                               .within(self.dossier))
+
+    @browsing
+    def test_statusmessage_if_copy_success(self, browser):
+
+        browser.login().open(self.document, view='copy_item')
+
+        self.assertEqual(self.document.absolute_url(), browser.url)
+        self.assertEqual(['Selected objects successfully copied.'], info_messages())
+
+    @browsing
+    def test_statusmessage_if_paste_success(self, browser):
+
+        browser.login().open(self.document, view='copy_item')
+        dest_dossier = create(Builder('dossier'))
+
+        browser.open(dest_dossier, view='tabbed_view')
+        browser.css('#contentActionMenus a#paste').first.click()
+
+        self.assertEqual(dest_dossier.absolute_url(), browser.url)
+        self.assertEqual(['Objects from clipboard successfully pasted.'], info_messages())
+
+
 class TestCopyPaste(FunctionalTestCase):
 
     def setUp(self):
