@@ -3,8 +3,8 @@ from opengever.base import _
 from opengever.base.clipboard import Clipboard
 from plone import api
 from plone.dexterity.interfaces import IDexterityContainer
-from plone.dexterity.interfaces import IDexterityContent
 from plone.z3cform import layout
+from Products.Five.browser import BrowserView
 
 
 class CopyItemsFormView(layout.FormWrapper, grok.View):
@@ -62,15 +62,9 @@ class CopyItemsFormView(layout.FormWrapper, grok.View):
         return all(obj.cb_isCopyable() for obj in objs)
 
 
-class CopyItemView(grok.View):
-    grok.context(IDexterityContent)
-    grok.name('copy_item')
-    grok.require('zope2.View')
+class CopyItemView(BrowserView):
 
-    def __init__(self, context, request):
-        grok.View.__init__(self, context, request)
-
-    def render(self):
+    def __call__(self):
 
         if self.context.cb_isCopyable():
             Clipboard(self.request).set_objs([self.context])
